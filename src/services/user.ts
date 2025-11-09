@@ -1,4 +1,4 @@
-import { API_URL } from '@/app/utils/constant'
+import { API_URL } from '@/utils/constant'
 
 export const getAllUser = async () => {
   const response = await fetch(`${API_URL}/user/all`, {
