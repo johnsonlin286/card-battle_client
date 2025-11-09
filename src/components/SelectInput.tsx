@@ -4,7 +4,7 @@ interface SelectInputProps {
   id: string;
   label: string;
   name: string;
-  options: { value: string; label: string }[];
+  options: SelectOption[];
   required: boolean;
   onChange: (value: string) => void;
   className?: string;

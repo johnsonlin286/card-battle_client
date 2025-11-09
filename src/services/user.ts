@@ -11,3 +11,5 @@ export const getAllUser = async () => {
   const data = await response.json()
   return data
 }
+
+// export const registerUser = async () => {}
