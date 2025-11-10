@@ -10,20 +10,27 @@ import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
 
 export default function FormRegister() {
-  const [state, setState] = useState<string>('');
-  const [keyword, setKeyword] = useState<string>('');
-  const [countryData, setCountryData] = useState<SelectOption[]>([]);
+  const [selectedCountry, setSelectedCountry] = useState<string>('');
+  const [countryKeyword, setCountryKeyword] = useState<string>('');
+  const [countryData, setCountryData] = useState<SelectOption[]>([
+    { value: 'indonesia', label: 'Indonesia' },
+    { value: 'thailand', label: 'Thailand' },
+    { value: 'philippines', label: 'Philippines' },
+    { value: 'vietnam', label: 'Vietnam' },
+    { value: 'malaysia', label: 'Malaysia' },
+    { value: 'singapore', label: 'Singapore' },
+  ]);
 
   const { data: states, isLoading: isLoadingStates } = useQuery({
-    queryKey: [QUERY_KEYS.STATE],
-    queryFn: () => fetchState({ name: '', page: 1, limit: 10 }),
+    queryKey: [QUERY_KEYS.STATE, countryKeyword],
+    queryFn: () => fetchState({ name: countryKeyword, page: 1, limit: 10 }),
     select: (data) => data.data.map((state: { name: string }) => ({ value: state.name, label: state.name })),
-    enabled: !!keyword,
+    enabled: !!countryKeyword,
   })
   
   useEffect(() => {
     if (states) {
-      console.log(states);
+      setCountryData(states);
     }
   }, [states])
 
@@ -68,11 +75,16 @@ export default function FormRegister() {
       />
       <SelectInput
         id="state"
+        isSearchable={true}
         label="State"
         name="state"
-        options={states || []}
+        placeholder="Select or search your country"
+        options={countryData}
+        value={selectedCountry}
         required={true}
-        onChange={(value) => setState(value)}
+        onKeywordChange={(value) => setCountryKeyword(value)}
+        onChange={(value) => setSelectedCountry(value)}
+        isLoading={isLoadingStates}
       />
       <div className="flex justify-end">
         <Button type="submit" color="primary" className="w-1/3">Register</Button>

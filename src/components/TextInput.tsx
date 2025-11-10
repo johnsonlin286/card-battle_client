@@ -35,7 +35,7 @@ export default function FormInput({ id, label, type, name, placeholder, required
         />
         {
           type === 'password' && (
-            <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-gray-500 hover:text-gray-700">
+            <button type="button" onClick={() => setShowPassword(!showPassword)} className="text-gray-500 hover:text-gray-700 cursor-pointer">
               {showPassword ? <EyeIcon className="w-4 h-4" /> : <EyeOffIcon className="w-4 h-4" />}
             </button>
           )
