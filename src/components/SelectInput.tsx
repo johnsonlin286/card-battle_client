@@ -16,11 +16,12 @@ interface SelectInputProps {
   required: boolean;
   onKeywordChange?: (value: string) => void;
   onChange: (value: string) => void;
+  errorMessage?: string;
   isLoading?: boolean;
   className?: string;
 }
 
-export default function SelectInput({ id, isSearchable, label, name, placeholder, options, value, required, onChange, onKeywordChange, isLoading, className }: SelectInputProps) {
+export default function SelectInput({ id, isSearchable, label, name, placeholder, options, value, required, onChange, onKeywordChange, errorMessage, isLoading, className }: SelectInputProps) {
   const elmRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [showOptions, setShowOptions] = useState(false);
@@ -90,6 +91,9 @@ export default function SelectInput({ id, isSearchable, label, name, placeholder
           <ChevronDownIcon className={`w-4 h-4 transition-transform duration-300 ${showOptions ? 'rotate-180' : ''}`} />
         </button>
       </div>
+      <small className="text-red-500">
+        {errorMessage && errorMessage}
+      </small>
       {showOptions && (
         <div className="absolute top-full left-0 w-full max-h-[230px] overflow-y-auto bg-white border border-gray-300 rounded-md shadow-md p-2 mt-2">
           { isLoading ? (

@@ -1,11 +1,14 @@
 'use client';
 
 import { useEffect, useState } from "react";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery } from "@tanstack/react-query";
+import { useRouter } from "next/navigation";
 import * as z from "zod";
 
+import { QUERY_KEYS, MUTATION_KEYS } from "@/utils/constant";
 import { fetchState } from "@/services/state";
-import { QUERY_KEYS } from "@/utils/constant";
+import { registerUser } from "@/services/user";
+import { useToast } from "@/hooks/ToastContext";
 import Button from "./Button";
 import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
@@ -28,6 +31,7 @@ const formSchema = z.object({
 type RegisterForm = z.infer<typeof formSchema>;
 
 export default function FormRegister() {
+  const nextRouter = useRouter();
   const [formData, setFormData] = useState<RegisterForm>({
     username: '',
     email: '',
@@ -35,6 +39,8 @@ export default function FormRegister() {
     confirm_password: '',
     country: '',
   });
+  const [formErrors, setFormErrors] = useState<RegisterForm | undefined>();
+  const { success, error: showError } = useToast();
   const [countryKeyword, setCountryKeyword] = useState<string>('');
   const [countryData, setCountryData] = useState<SelectOption[]>([
     { value: 'indonesia', label: 'Indonesia' },
@@ -62,10 +68,60 @@ export default function FormRegister() {
     setFormData({ ...formData, [key]: value });
   }
 
+  const { mutateAsync: registerUserAsync, isPending: isRegistering } = useMutation({
+    mutationKey: [MUTATION_KEYS.REGISTER],
+    mutationFn: (payload: registerUserPayload) => registerUser(payload),
+    onSuccess: (data) => {
+      success('Registration successful! You can now log in.');
+      nextRouter.push('/login');
+    },
+    onError: () => {
+      showError('Registration failed. Please try again.');
+      setFormData({
+        username: '',
+        email: '',
+        password: '',
+        confirm_password: '',
+        country: '',
+      });
+    },
+  })
+
+  const handleError = (error: { path: string, message: string }[]) => {
+    error.forEach((item) => {
+      switch (item.path) {
+        case 'username':
+          setFormErrors((prev) => ({ ...prev, username: item.message }) as RegisterForm);
+          break;
+        case 'email':
+          setFormErrors((prev) => ({ ...prev, email: item.message }) as RegisterForm);
+          break;
+        case 'password':
+          setFormErrors((prev) => ({ ...prev, password: item.message }) as RegisterForm);
+          break;
+        case 'confirm_password':
+          setFormErrors((prev) => ({ ...prev, confirm_password: item.message }) as RegisterForm);
+          break;
+        case 'country':
+          setFormErrors((prev) => ({ ...prev, country: item.message }) as RegisterForm);
+          break;
+      }
+    })
+  }
+
   const handleFormSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    
-    console.log(formData);
+    const validationResult = formSchema.safeParse(formData);
+    if (!validationResult.success) {
+      const errorMessage = validationResult.error.issues.map((issue) => ({
+        path: issue.path.join('.') || "(root)",
+        message: issue.message,
+      }));
+      handleError(errorMessage);
+      return;
+    }
+    const { data } = validationResult;
+    registerUserAsync(data);
   }
 
   return (
@@ -79,6 +135,7 @@ export default function FormRegister() {
         placeholder="Enter your username"
         required={true}
         onChange={(value) => updateFormData('username', value)}
+        errorMessage={formErrors?.username}
       />
       <TextInput
         id="email"
@@ -88,6 +145,7 @@ export default function FormRegister() {
         placeholder="Enter your email"
         required={true}
         onChange={(value) => updateFormData('email', value)}
+        errorMessage={formErrors?.email}
       />
       <TextInput
         id="password"
@@ -97,6 +155,7 @@ export default function FormRegister() {
         placeholder="Enter your password"
         required={true}
         onChange={(value) => updateFormData('password', value)}
+        errorMessage={formErrors?.password}
       />
       <TextInput
         id="confirm_password"
@@ -106,6 +165,7 @@ export default function FormRegister() {
         placeholder="Enter your confirm password"
         required={true}
         onChange={(value) => updateFormData('confirm_password', value)}
+        errorMessage={formErrors?.confirm_password}
       />
       <SelectInput
         id="state"
@@ -121,7 +181,7 @@ export default function FormRegister() {
         isLoading={isLoadingStates}
       />
       <div className="flex justify-end">
-        <Button type="submit" color="primary" className="w-1/3">Register</Button>
+        <Button type="submit" color="primary" disabled={isRegistering} className="w-1/3">Register</Button>
       </div>
     </form>
   )

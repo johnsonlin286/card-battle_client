@@ -11,10 +11,11 @@ interface TextInputProps {
   placeholder: string;
   required: boolean;
   onChange: (value: string) => void;
+  errorMessage?: string;
   className?: string;
 }
 
-export default function FormInput({ id, label, type, name, placeholder, required, onChange, className }: TextInputProps) {
+export default function FormInput({ id, label, type, name, placeholder, required, onChange, errorMessage, className }: TextInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -22,7 +23,7 @@ export default function FormInput({ id, label, type, name, placeholder, required
       <label htmlFor={id} className="w-fit text-sm font-medium text-gray-700">
         {label}
       </label>
-      <div className="flex items-center justify-between gap-2 border border-gray-300 rounded-md p-2 focus-within:border-blue-500">
+      <div className={`flex items-center justify-between gap-2 border border-gray-300 rounded-md p-2 focus-within:border-blue-500 ${errorMessage ? 'border-red-500' : ''}`}>
         <input
           type={type === 'password' ? (showPassword ? 'text' : 'password') : type}
           id={id}
@@ -41,6 +42,9 @@ export default function FormInput({ id, label, type, name, placeholder, required
           )
         }
       </div>
+      <small className="text-red-500">
+        {errorMessage && errorMessage}
+      </small>
     </div>
   )
 }

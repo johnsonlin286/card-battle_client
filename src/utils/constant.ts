@@ -5,6 +5,8 @@ const QUERY_KEYS = {
   STATE: 'state',
 }
 
-const MUTATION_KEYS = {}
+const MUTATION_KEYS = {
+  REGISTER: 'register',
+}
 
 export { API_URL, QUERY_KEYS, MUTATION_KEYS }

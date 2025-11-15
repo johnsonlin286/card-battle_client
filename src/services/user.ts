@@ -13,7 +13,7 @@ export const getAllUser = async () => {
 }
 
 export const registerUser = async (payload: registerUserPayload) => {
-  const response = await fetch(`${API_URL}/user/register`, {
+  const response = await fetch(`${API_URL}/user/create`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
