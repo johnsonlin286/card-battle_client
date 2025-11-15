@@ -2,7 +2,7 @@ import { ReactNode } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 
 import { QueryProvider } from '@/components/QueryProvider'
-import { ToastProvider } from '@/hooks/ToastContext'
+import Toaster from '@/components/Toast'
 
 import "./globals.css";
 
@@ -33,9 +33,8 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryProvider>
-          <ToastProvider>
-            {children}
-          </ToastProvider>
+          {children}
+          <Toaster />
         </QueryProvider>
       </body>
     </html>

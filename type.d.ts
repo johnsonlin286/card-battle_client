@@ -26,3 +26,10 @@ type loginUserResponse = {
   token: string;
   expires_at: string;
 }
+
+type Toast = {
+  id?: string;
+  message: React.ReactNode;
+  variant: 'success' | 'error' | 'warning' | 'info';
+  duration?: number;
+}

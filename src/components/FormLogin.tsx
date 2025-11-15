@@ -8,7 +8,7 @@ import Cookies from "js-cookie";
 
 import { MUTATION_KEYS } from "@/utils/constant";
 import { loginUser } from "@/services/user";
-import { useToast } from "@/hooks/ToastContext";
+import { useToastStore } from "@/store/toast";
 import Button from "./Button";
 import TextInput from "./TextInput";
 
@@ -26,7 +26,7 @@ export default function FormLogin() {
     password: '',
   });
   const [formErrors, setFormErrors] = useState<LoginForm | undefined>();
-  const { success, error: showError } = useToast();
+  const { addToast } = useToastStore();
 
   const updateFormData = (key: keyof LoginForm, value: string) => {
     setFormErrors((prev) => ({ ...prev, [key]: '' }) as LoginForm);
@@ -37,7 +37,11 @@ export default function FormLogin() {
     mutationKey: [MUTATION_KEYS.LOGIN],
     mutationFn: (payload: loginUserPayload) => loginUser(payload),
     onSuccess: (data) => {
-      success('Login successful! You are now logged in.');
+      addToast({
+        message: 'Login successful! You are now logged in.',
+        variant: 'success',
+        duration: 3000,
+      });
       Cookies.set('cardBattleToken', data.token, { expires: 7 }); // 7 days
       nextRouter.push('/dashboard');
     },
@@ -50,7 +54,10 @@ export default function FormLogin() {
           setFormErrors((prev) => ({ ...prev, email: 'Email not confirmed' }) as LoginForm);
           break;
         default:
-          showError('Login failed. Please try again.');
+          addToast({
+            message: 'Login failed. Please try again.',
+            variant: 'error',
+          });
           break;
       }
       setFormData((prev) => ({ ...prev, password: '' }) as LoginForm);

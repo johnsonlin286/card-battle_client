@@ -8,7 +8,7 @@ import * as z from "zod";
 import { QUERY_KEYS, MUTATION_KEYS } from "@/utils/constant";
 import { fetchState } from "@/services/state";
 import { registerUser } from "@/services/user";
-import { useToast } from "@/hooks/ToastContext";
+import { useToastStore } from "@/store/toast";
 import Button from "./Button";
 import TextInput from "./TextInput";
 import SelectInput from "./SelectInput";
@@ -40,7 +40,6 @@ export default function FormRegister() {
     country: '',
   });
   const [formErrors, setFormErrors] = useState<RegisterForm | undefined>();
-  const { success, error: showError } = useToast();
   const [countryKeyword, setCountryKeyword] = useState<string>('');
   const [countryData, setCountryData] = useState<SelectOption[]>([
     { value: 'indonesia', label: 'Indonesia' },
@@ -50,6 +49,7 @@ export default function FormRegister() {
     { value: 'malaysia', label: 'Malaysia' },
     { value: 'singapore', label: 'Singapore' },
   ]);
+  const { addToast } = useToastStore();
 
   const { data: states, isLoading: isLoadingStates } = useQuery({
     queryKey: [QUERY_KEYS.STATE, countryKeyword],
@@ -72,12 +72,18 @@ export default function FormRegister() {
   const { mutateAsync: registerUserAsync, isPending: isRegistering } = useMutation({
     mutationKey: [MUTATION_KEYS.REGISTER],
     mutationFn: (payload: registerUserPayload) => registerUser(payload),
-    onSuccess: (data) => {
-      success('Registration successful! You can now log in.');
+    onSuccess: () => {
       nextRouter.push('/login');
+      addToast({
+        message: 'Register successful! You can now login.',
+        variant: 'success',
+      });
     },
     onError: () => {
-      showError('Registration failed. Please try again.');
+      addToast({
+        message: 'Register failed. Please try again.',
+        variant: 'error',
+      });
       setFormData((prev) => ({ ...prev, password: '', confirm_password: '' }) as RegisterForm);
     },
   })

@@ -1,73 +1,66 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 
-export type ToastVariant = 'success' | 'error' | 'warning' | 'info';
+import { useToastStore } from '@/store/toast';
 
-export interface ToastProps {
-  children: React.ReactNode;
-  variant?: ToastVariant;
-  duration?: number;
-  onDismiss?: () => void;
-}
-
-export default function Toast({ 
-  children, 
-  variant = 'info', 
-  duration = 5000,
-  onDismiss 
-}: ToastProps) {
-  const [isVisible, setIsVisible] = useState(true);
-  const [isAnimating, setIsAnimating] = useState(false);
+function Toast({ id, message, variant, duration }: Toast) {
+  const toastRef = useRef<HTMLDivElement>(null);
   const [isMounted, setIsMounted] = useState(false);
+  const { removeToast } = useToastStore();
 
   useEffect(() => {
-    // Trigger slide down and fade in animation on mount
-    setTimeout(() => setIsMounted(true), 10);
+    setIsMounted(true);
   }, []);
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsAnimating(true);
-      setTimeout(() => {
-        setIsVisible(false);
-        onDismiss?.();
-      }, 300); // Match animation duration
-    }, duration);
+    const timeout = setTimeout(() => {
+      setIsMounted(false);
+      if (toastRef.current) {
+        toastRef.current.addEventListener('transitionend', () => {
+          removeToast(id || '');
+        }, { once: true });
+      }
+    }, duration)
 
-    return () => clearTimeout(timer);
-  }, [duration, onDismiss]);
-
-  if (!isVisible) return null;
+    return () => clearTimeout(timeout);
+  }, [duration])
 
   const variantStyles = {
-    success: 'bg-green-500 text-white border-green-600',
-    error: 'bg-red-500 text-white border-red-600',
-    warning: 'bg-yellow-500 text-white border-yellow-600',
-    info: 'bg-blue-500 text-white border-blue-600',
+    success: 'bg-green-300 text-green-800',
+    error: 'bg-red-300 text-red-800',
+    warning: 'bg-yellow-300 text-yellow-800',
+    info: 'bg-blue-300 text-blue-800',
   }[variant];
 
   return (
-    <div
-      className={`
-        px-6 py-4 rounded-lg shadow-lg
-        border-2 min-w-[300px] max-w-[500px]
-        ${variantStyles}
-        transition-all duration-300 ease-in-out
-        ${isAnimating 
-          ? 'opacity-0 -translate-y-4' 
-          : isMounted
-          ? 'opacity-100 translate-y-0'
-          : 'opacity-0 -translate-y-4'
-        }
-      `}
-      role="alert"
-      aria-live="assertive"
-    >
-      <div className="flex items-center justify-between">
-        {children}
+      <div
+        ref={toastRef}
+        className={`
+          px-6 py-4 rounded-lg shadow-lg
+          min-w-[300px] max-w-[500px]
+          ${variantStyles}
+          transition-all duration-300 ease-in-out
+          ${isMounted ? 'opacity-100 translate-y-0' : 'opacity-0 -translate-y-4'}
+        `}
+        role="alert"
+        aria-live="assertive"
+      >
+        {message}
       </div>
-    </div>
   );
 }
 
+export default function Toaster() {
+  const { toasts } = useToastStore();
+
+  if (toasts.length === 0) return null; 
+
+  return (
+    <div className="fixed top-4 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 z-50">
+      {toasts.map((toast) => (
+        <Toast key={toast.id} {...toast} />
+      ))}
+    </div>
+  )
+}
