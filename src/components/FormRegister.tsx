@@ -65,6 +65,7 @@ export default function FormRegister() {
   }, [states])
 
   const updateFormData = (key: keyof registerUserPayload, value: string) => {
+    setFormErrors((prev) => ({ ...prev, [key]: '' }) as RegisterForm);
     setFormData({ ...formData, [key]: value });
   }
 
@@ -77,13 +78,7 @@ export default function FormRegister() {
     },
     onError: () => {
       showError('Registration failed. Please try again.');
-      setFormData({
-        username: '',
-        email: '',
-        password: '',
-        confirm_password: '',
-        country: '',
-      });
+      setFormData((prev) => ({ ...prev, password: '', confirm_password: '' }) as RegisterForm);
     },
   })
 
@@ -133,6 +128,7 @@ export default function FormRegister() {
         type="text"
         name="username"
         placeholder="Enter your username"
+        value={formData.username}
         required={true}
         onChange={(value) => updateFormData('username', value)}
         errorMessage={formErrors?.username}
@@ -143,6 +139,7 @@ export default function FormRegister() {
         type="email"
         name="email"
         placeholder="Enter your email"
+        value={formData.email}
         required={true}
         onChange={(value) => updateFormData('email', value)}
         errorMessage={formErrors?.email}
@@ -153,6 +150,7 @@ export default function FormRegister() {
         type="password"
         name="password"
         placeholder="Enter your password"
+        value={formData.password}
         required={true}
         onChange={(value) => updateFormData('password', value)}
         errorMessage={formErrors?.password}
@@ -163,6 +161,7 @@ export default function FormRegister() {
         type="password"
         name="confirm_password"
         placeholder="Enter your confirm password"
+        value={formData.confirm_password}
         required={true}
         onChange={(value) => updateFormData('confirm_password', value)}
         errorMessage={formErrors?.confirm_password}

@@ -9,13 +9,14 @@ interface TextInputProps {
   type: 'text' | 'email' | 'password';
   name: string;
   placeholder: string;
+  value?: string;
   required: boolean;
   onChange: (value: string) => void;
   errorMessage?: string;
   className?: string;
 }
 
-export default function FormInput({ id, label, type, name, placeholder, required, onChange, errorMessage, className }: TextInputProps) {
+export default function FormInput({ id, label, type, name, placeholder, value, required, onChange, errorMessage, className }: TextInputProps) {
   const [showPassword, setShowPassword] = useState(false);
 
   return (
@@ -29,6 +30,7 @@ export default function FormInput({ id, label, type, name, placeholder, required
           id={id}
           name={name}
           placeholder={placeholder}
+          value={value}
           required={required}
           className="flex-1 outline-none"
           autoComplete={type === 'password' ? 'current-password' : 'off'}

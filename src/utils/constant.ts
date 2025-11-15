@@ -7,6 +7,7 @@ const QUERY_KEYS = {
 
 const MUTATION_KEYS = {
   REGISTER: 'register',
+  LOGIN: 'login',
 }
 
 export { API_URL, QUERY_KEYS, MUTATION_KEYS }

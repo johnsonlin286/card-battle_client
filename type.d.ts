@@ -16,3 +16,13 @@ type registerUserPayload = {
   confirm_password?: string;
   country: string;
 }
+
+type loginUserPayload = {
+  email: string;
+  password: string;
+}
+
+type loginUserResponse = {
+  token: string;
+  expires_at: string;
+}
