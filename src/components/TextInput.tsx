@@ -19,7 +19,7 @@ export default function FormInput({ id, label, type, name, placeholder, required
 
   return (
     <div className={`flex flex-col gap-2 ${className}`}>
-      <label htmlFor={id} className="text-sm font-medium text-gray-700">
+      <label htmlFor={id} className="w-fit text-sm font-medium text-gray-700">
         {label}
       </label>
       <div className="flex items-center justify-between gap-2 border border-gray-300 rounded-md p-2 focus-within:border-blue-500">

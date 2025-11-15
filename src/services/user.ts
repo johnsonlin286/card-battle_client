@@ -12,4 +12,15 @@ export const getAllUser = async () => {
   return data
 }
 
-// export const registerUser = async () => {}
+export const registerUser = async (payload: registerUserPayload) => {
+  const response = await fetch(`${API_URL}/user/register`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'x-api-key': process.env.NEXT_PUBLIC_API_KEY || '',
+    },
+    body: JSON.stringify(payload),
+  })
+  const data = await response.json()
+  return data
+}

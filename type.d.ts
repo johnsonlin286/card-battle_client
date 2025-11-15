@@ -8,3 +8,11 @@ type fetchStatePayload = {
   page?: number;
   limit?: number;
 }
+
+type registerUserPayload = {
+  username: string;
+  email: string;
+  password: string;
+  confirm_password?: string;
+  country: string;
+}

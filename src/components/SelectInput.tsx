@@ -69,42 +69,26 @@ export default function SelectInput({ id, isSearchable, label, name, placeholder
 
   return (
     <div className={`relative flex flex-col gap-2 ${className}`}>
-      <label htmlFor={id} className="text-sm font-medium text-gray-700">
+      <label htmlFor={id} className="w-fit text-sm font-medium text-gray-700">
         {label}
       </label>
       <div ref={elmRef} className="flex items-center justify-between gap-2 border border-gray-300 rounded-md p-2 focus-within:border-blue-500">
-        {isSearchable ? (
-          <>
-            <input
-              ref={inputRef}
-              type="text"
-              id={id}
-              name={name}
-              placeholder={placeholder}
-              value={selectedValue}
-              required={required}
-              onFocus={() => setShowOptions(true)}
-              onChange={(e) => onChangeKeyword(e.target.value)}
-              className="flex-1 outline-none"
-            />
-            <button type="button" onClick={() => setShowOptions(!showOptions)} className="text-gray-500 hover:text-gray-700 cursor-pointer">
-              <ChevronDownIcon className={`w-4 h-4 transition-transform duration-300 ${showOptions ? 'rotate-180' : ''}`} />
-            </button>
-          </>
-        ) : (
-          <select
-            id={id}
-            name={name}
-            required={required}
-            value={selectedValue}
-            className="flex-1 outline-none"
-            onChange={(e) => setSelectedValue(e.target.value)}
-          >
-            {options.map((option) => (
-              <option key={option.value} value={option.value} selected={selectedValue === option.value}>{option.label}</option>
-            ))}
-          </select>
-        )}
+        <input
+          ref={inputRef}
+          type="text"
+          id={id}
+          name={name}
+          placeholder={placeholder}
+          value={selectedValue}
+          required={required}
+          onFocus={() => setShowOptions(true)}
+          onChange={(e) => onChangeKeyword(e.target.value)}
+          className="flex-1 outline-none"
+          readOnly={!isSearchable ? true : false}
+        />
+        <button type="button" onClick={() => setShowOptions(!showOptions)} className="text-gray-500 hover:text-gray-700 cursor-pointer">
+          <ChevronDownIcon className={`w-4 h-4 transition-transform duration-300 ${showOptions ? 'rotate-180' : ''}`} />
+        </button>
       </div>
       {showOptions && (
         <div className="absolute top-full left-0 w-full max-h-[230px] overflow-y-auto bg-white border border-gray-300 rounded-md shadow-md p-2 mt-2">
@@ -113,7 +97,7 @@ export default function SelectInput({ id, isSearchable, label, name, placeholder
               <Loader2Icon className="w-4 h-4 animate-spin text-gray-500" />
             </div>
           ) : options.length > 0 ? options.map((option) => (
-            <button key={option.value} value={option.value} onClick={() => handleSelectOption(option.value)} className="w-full text-left text-gray-500 hover:text-gray-700 cursor-pointer py-2 px-4">
+            <button key={option.value} value={option.value} onClick={() => handleSelectOption(option.value)} className="w-full text-left text-gray-500 hover:text-gray-700 hover:bg-gray-100 cursor-pointer py-2 px-4">
               {option.label}
             </button>
           )) : (
