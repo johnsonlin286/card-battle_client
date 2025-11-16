@@ -79,7 +79,7 @@ export default function FormRegister() {
         variant: 'success',
       });
     },
-    onError: () => {
+    onError: (error) => {
       addToast({
         message: 'Register failed. Please try again.',
         variant: 'error',

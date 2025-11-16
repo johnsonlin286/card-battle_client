@@ -8,6 +8,7 @@ import Cookies from "js-cookie";
 
 import { MUTATION_KEYS } from "@/utils/constant";
 import { loginUser } from "@/services/user";
+import { useAccountStore } from "@/store/account";
 import { useToastStore } from "@/store/toast";
 import Button from "./Button";
 import TextInput from "./TextInput";
@@ -26,6 +27,7 @@ export default function FormLogin() {
     password: '',
   });
   const [formErrors, setFormErrors] = useState<LoginForm | undefined>();
+  const { setIsAuthenticated } = useAccountStore();
   const { addToast } = useToastStore();
 
   const updateFormData = (key: keyof LoginForm, value: string) => {
@@ -42,7 +44,8 @@ export default function FormLogin() {
         variant: 'success',
         duration: 3000,
       });
-      Cookies.set('cardBattleToken', data.token, { expires: 7 }); // 7 days
+      setIsAuthenticated(true);
+      Cookies.set('cardBattleToken', data.token, { expires: data.expires_at });
       nextRouter.push('/dashboard');
     },
     onError: (error) => {
@@ -57,6 +60,7 @@ export default function FormLogin() {
           addToast({
             message: 'Login failed. Please try again.',
             variant: 'error',
+            duration: 3000,
           });
           break;
       }

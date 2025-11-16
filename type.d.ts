@@ -24,7 +24,7 @@ type loginUserPayload = {
 
 type loginUserResponse = {
   token: string;
-  expires_at: string;
+  expires_at: number;
 }
 
 type Toast = {
@@ -32,4 +32,21 @@ type Toast = {
   message: React.ReactNode;
   variant: 'success' | 'error' | 'warning' | 'info';
   duration?: number;
+}
+
+type AccountType = {
+  id: string;
+  username: string;
+  first_name: string;
+  last_name: string;
+  sex: string;
+  date_of_birth: string;
+  country: string;
+  avatar: string;
+  is_active: boolean;
+  gold: number;
+  energy: number;
+  token: number;
+  created_at: string;
+  updated_at: string;
 }
