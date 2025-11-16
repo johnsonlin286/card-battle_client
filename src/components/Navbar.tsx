@@ -36,9 +36,6 @@ export default function Navbar() {
           {isAuthenticated ? (
             <>
               <li>
-                <Link href="/dashboard">Dashboard</Link>
-              </li>
-              <li>
                 <Button type="button" color="primary" disabled={isLoggingOut} onClick={logoutAsync}>
                   Logout
                 </Button>

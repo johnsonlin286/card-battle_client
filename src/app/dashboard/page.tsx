@@ -4,6 +4,7 @@ import { useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 
 import useCheckIsAuth from '@/hooks/useCheckIsAuth';
+import NavDrawer from '@/components/NavDrawer';
 
 export default function DashboardPage() {
   const nextRouter = useRouter();
@@ -17,8 +18,9 @@ export default function DashboardPage() {
   }, [isAuthenticated]);
 
   return (
-    <div>
-      <h1>Dashboard</h1>
-    </div>
+    <section className="flex justify-between items-start gap-5 min-h-screen">
+      <NavDrawer />
+      <div></div>
+    </section>
   )
 }
