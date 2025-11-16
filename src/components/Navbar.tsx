@@ -1,35 +1,25 @@
 'use client';
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 import { useQuery } from "@tanstack/react-query";
 import Link from "next/link";
-import Cookies from "js-cookie";
 
 import { QUERY_KEYS } from "@/utils/constant";
 import { useAccountStore } from "@/store/account";
 import { fetchAccountData } from "@/services/user";
+import useCheckIsAuth from "@/hooks/useCheckIsAuth";
 import useLogout from "@/hooks/useLogout";
 import Button from "./Button";
 
 export default function Navbar() {
-  const { isAuthenticated, setIsAuthenticated, account, setAccount } = useAccountStore();
-  const { logoutAsync, isLoggingOut, clearAuthData } = useLogout();
-
-  useEffect(() => {
-    const token = Cookies.get('cardBattleToken');
-    if (!token) {
-      setIsAuthenticated(false);
-      clearAuthData();
-      return;
-    }
-    setIsAuthenticated(true);
-  }, []);
+  const { account, setAccount } = useAccountStore();
+  const { isAuthenticated } = useCheckIsAuth();
+  const { logoutAsync, isLoggingOut } = useLogout();
 
   const { data: accountData, isLoading: isLoadingAccount } = useQuery({
     queryKey: [QUERY_KEYS.ACCOUNT],
     queryFn: fetchAccountData,
-    enabled: isAuthenticated && !account,
+    enabled: isAuthenticated === true && !account,
   })
 
   useEffect(() => {
@@ -40,7 +30,7 @@ export default function Navbar() {
 
   return (
     <nav className="fixed top-0 left-0 right-0 bg-white shadow-md z-50">
-      <div className="container flex justify-between items-center mx-auto px-4 py-4">
+      <div className="container flex justify-between items-center mx-auto px-4 py-5">
         <h1 className="text-2xl font-bold">Navbar</h1>
         <ul className="flex items-center gap-4">
           {isAuthenticated ? (
@@ -56,7 +46,7 @@ export default function Navbar() {
             </>
           ) : (
             <li>
-              <Link href="/login">Login</Link>
+              <Button type="link" color="primary" href="/login">Login or Register</Button>
             </li>
           )}
         </ul>

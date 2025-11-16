@@ -2,7 +2,7 @@ import { create } from "zustand";
 import { persist, createJSONStorage } from "zustand/middleware";
 
 interface AccountStore {
-  isAuthenticated: boolean;
+  isAuthenticated: boolean | null;
   account: AccountType | null;
   setIsAuthenticated: (isAuthenticated: boolean) => void;
   clearIsAuthenticated: () => void;
@@ -13,7 +13,7 @@ interface AccountStore {
 export const useAccountStore = create<AccountStore>()(
   persist(
     (set) => ({
-      isAuthenticated: false,
+      isAuthenticated: null,
       account: null,
       setIsAuthenticated: () => set({ isAuthenticated: true }),
       clearIsAuthenticated: () => set({ isAuthenticated: false }),
