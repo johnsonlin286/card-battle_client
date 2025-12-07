@@ -29,7 +29,7 @@ export const registerUser = async (payload: registerUserPayload) => {
   return data;
 }
 
-export const loginUser = async (payload: loginUserPayload): Promise<loginUserResponse> => {
+export const loginUser = async (payload: loginUserPayload): Promise<loginUserResponse | ErrorResponse> => {
   const response = await fetch(`${API_URL}/user/login`, {
     method: 'POST',
     headers: {
@@ -40,7 +40,10 @@ export const loginUser = async (payload: loginUserPayload): Promise<loginUserRes
   })
   const data = await response.json();
   if (!response.ok) {
-    throw new Error(data.error);
+    return {
+      success: data.success,
+      message: data.error,
+    }
   }
   return data.data;
 }
@@ -60,7 +63,10 @@ export const logoutUser = async () => {
   })
   const data = await response.json()
   if (!response.ok) {
-    throw new Error(data.error);
+    return {
+      success: data.success,
+      message: data.error,
+    }
   }
   return data;
 }

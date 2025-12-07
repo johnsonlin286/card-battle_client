@@ -3,6 +3,7 @@ import { Geist, Geist_Mono } from "next/font/google";
 
 import { QueryProvider } from '@/components/QueryProvider'
 import Navbar from '@/components/Navbar'
+import NavDrawer from '@/components/NavDrawer'
 import Toaster from '@/components/Toast'
 
 import "./globals.css";
@@ -34,11 +35,16 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <QueryProvider>
-          <Navbar />
-          <main className="mt-20">
-            {children}
+          <main className="pt-20">
+            <Navbar />
+            <section className="flex justify-between items-start">
+              <NavDrawer />
+              <div className="container p-5">
+                {children}
+              </div>
+            </section>
+            <Toaster />
           </main>
-          <Toaster />
         </QueryProvider>
       </body>
     </html>

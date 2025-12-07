@@ -1,3 +1,8 @@
+type ErrorResponse = {
+  success: boolean;
+  message: string;
+}
+
 type SelectOption = {
   value: string;
   label: string;

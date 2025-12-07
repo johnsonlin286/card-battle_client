@@ -31,12 +31,13 @@ export default function useLogout() {
       });
       nextRouter.push('/login');
     },
-    onError: (error) => {
-      console.error(error);
+    onError: (error: any) => {
+      clearAuthData();
       addToast({
-        message: 'Logged out failed. Please try again.',
+        message: `Logout failed. ${error.message}`,
         variant: 'error',
       });
+      nextRouter.push('/login');
     },
   })
 

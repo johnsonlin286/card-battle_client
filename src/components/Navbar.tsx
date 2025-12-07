@@ -43,7 +43,7 @@ export default function Navbar() {
             </>
           ) : (
             <li>
-              <Button type="link" color="primary" href="/login">Login or Register</Button>
+              <Button type="link" color="primary" block href="/login">Login or Register</Button>
             </li>
           )}
         </ul>
