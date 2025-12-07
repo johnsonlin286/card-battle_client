@@ -1,5 +1,6 @@
 import { useMemo } from "react";
 import Link from "next/link";
+
 interface ButtonProps {
   children: React.ReactNode;
   type: 'button' | 'submit' | 'reset' | 'link';
@@ -11,45 +12,62 @@ interface ButtonProps {
   className?: string;
 }
 
-export default function Button({ children, type, color, block, href, disabled, onClick, className }: ButtonProps) {
-  const colorClass = {
-    primary: 'border-2 border-blue-500 hover:border-blue-600',
-    secondary: 'border-2 border-gray-500 hover:border-gray-600',
-    danger: 'border-2 border-red-500 hover:border-red-600',
-    warning: 'border-2 border-yellow-500 hover:border-yellow-600',
-    info: 'border-2 border-blue-500 hover:border-blue-600',
-    success: 'border-2 border-green-500 hover:border-green-600',
-  }[color];
+// Move color maps outside component to prevent recreation on every render
+const COLOR_CLASSES = {
+  primary: 'border-2 border-blue-500 hover:border-blue-600',
+  secondary: 'border-2 border-gray-500 hover:border-gray-600',
+  danger: 'border-2 border-red-500 hover:border-red-600',
+  warning: 'border-2 border-yellow-500 hover:border-yellow-600',
+  info: 'border-2 border-blue-500 hover:border-blue-600',
+  success: 'border-2 border-green-500 hover:border-green-600',
+} as const;
 
-  const blockClass = {
-    primary: 'bg-blue-500 hover:bg-blue-600 text-white',
-    secondary: 'bg-gray-500 hover:border-gray-600 text-white',
-    danger: 'bg-red-500 hover:bg-red-600 text-white',
-    warning: 'bg-yellow-500 hover:bg-yellow-600 text-white',
-    info: 'bg-blue-500 hover:bg-blue-600 text-white',
-    success: 'bg-green-500 hover:border-green-600 text-white',
-  }[color]
+const BLOCK_CLASSES = {
+  primary: 'bg-blue-500 hover:bg-blue-600 text-white',
+  secondary: 'bg-gray-500 hover:border-gray-600 text-white',
+  danger: 'bg-red-500 hover:bg-red-600 text-white',
+  warning: 'bg-yellow-500 hover:bg-yellow-600 text-white',
+  info: 'bg-blue-500 hover:bg-blue-600 text-white',
+  success: 'bg-green-500 hover:border-green-600 text-white',
+} as const;
 
+// Base classes constant to avoid recreation
+const BASE_CLASSES = 'bg-white shadow-md rounded-full flex justify-center items-center cursor-pointer active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed p-1';
+const SPAN_CLASSES = 'inline-block w-full h-full rounded-full px-6 py-1.5';
+
+function Button({ children, type, color, block, href, disabled, onClick, className }: ButtonProps) {
+  // Memoize the style class based on color and block props
   const buttonStyle = useMemo(() => {
-    if (block) {
-      return blockClass;
-    }
-    return colorClass;
-  }, [block, colorClass, blockClass]);
+    return block ? BLOCK_CLASSES[color] : COLOR_CLASSES[color];
+  }, [block, color]);
+
+  // Memoize className construction
+  const containerClassName = useMemo(() => {
+    return className ? `${BASE_CLASSES} ${className}` : BASE_CLASSES;
+  }, [className]);
+
+  const spanClassName = useMemo(() => {
+    return `${buttonStyle} ${SPAN_CLASSES}`;
+  }, [buttonStyle]);
+
+  if (type === 'link') {
+    return (
+      <Link href={href as string} className={containerClassName}>
+        <span className={spanClassName}>{children}</span>
+      </Link>
+    );
+  }
 
   return (
-    <>
-      {type === 'link' ? (
-        <Link href={href as string} className={`bg-white shadow-md rounded-full flex justify-center items-center cursor-pointer active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed p-1 ${className}`}>
-          <span className={`${buttonStyle} inline-block w-full h-full rounded-full px-6 py-1.5`}>{children}</span>
-        </Link>
-      ) : (
-        <button type={type} disabled={disabled} className={`bg-white shadow-md rounded-full flex justify-center items-center cursor-pointer active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed p-1 ${className}`} onClick={onClick}>
-          <span className={`${buttonStyle} inline-block w-full h-full rounded-full px-6 py-1.5`}>
-            {children}
-          </span>
-        </button>
-      )}
-    </>
-  )
+    <button 
+      type={type} 
+      disabled={disabled} 
+      className={containerClassName} 
+      onClick={onClick}
+    >
+      <span className={spanClassName}>{children}</span>
+    </button>
+  );
 }
+
+export default Button;

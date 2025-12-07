@@ -1,6 +1,6 @@
 'use client';
 
-import { useRef, useState, useEffect } from "react";
+import { useRef, useState, useEffect, useCallback, useMemo } from "react";
 import { ChevronDownIcon, Loader2Icon } from "lucide-react";
 
 import useDebounce from "@/hooks/useDebounce";
@@ -21,59 +21,123 @@ interface SelectInputProps {
   className?: string;
 }
 
-export default function SelectInput({ id, isSearchable, label, name, placeholder, options, value, required, onChange, onKeywordChange, errorMessage, isLoading, className }: SelectInputProps) {
+function SelectInput({ id, isSearchable, label, name, placeholder, options, value, required, onChange, onKeywordChange, errorMessage, isLoading, className }: SelectInputProps) {
   const elmRef = useRef<HTMLDivElement>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const [showOptions, setShowOptions] = useState(false);
   const [selectedValue, setSelectedValue] = useState<string>('');
   const debounceKeyword = useDebounce(selectedValue, 500);
   
-  useEffect(() => {
-    const clickOutside = (event: MouseEvent) => {
-      if (elmRef.current && !elmRef.current.contains(event.target as Node)) {
-        setShowOptions(false);
-      }
+  // Memoize click outside handler to prevent function recreation
+  const handleClickOutside = useCallback((event: MouseEvent) => {
+    if (elmRef.current && !elmRef.current.contains(event.target as Node)) {
+      setShowOptions(false);
     }
-    document.addEventListener('click', clickOutside);
-    return () => document.removeEventListener('click', clickOutside);
-  }, [])
+  }, []);
 
+  // Setup click outside listener with proper cleanup
   useEffect(() => {
-    if (value) {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, [handleClickOutside]);
+
+  // Sync value prop with internal state
+  useEffect(() => {
+    if (value !== undefined) {
       setSelectedValue(value);
     }
-  }, [value])
+  }, [value]);
 
+  // Focus input when options are shown
   useEffect(() => {
     if (showOptions) {
       inputRef.current?.focus();
     }
-  }, [showOptions])
+  }, [showOptions]);
 
+  // Handle debounced keyword change
   useEffect(() => {
-    if (isSearchable && onKeywordChange) {
-      if (debounceKeyword.length < 2) return;
+    if (isSearchable && onKeywordChange && debounceKeyword.length >= 2) {
       onKeywordChange(debounceKeyword);
     }
-  }, [debounceKeyword, isSearchable])
+  }, [debounceKeyword, isSearchable, onKeywordChange]);
 
-  const onChangeKeyword = (value: string) => {
+  // Memoize keyword change handler
+  const handleKeywordChange = useCallback((newValue: string) => {
     if (!isSearchable) return;
-    setSelectedValue(value);
-  }
+    setSelectedValue(newValue);
+  }, [isSearchable]);
 
-  const handleSelectOption = (value: string) => {
-    setSelectedValue(value);
+  // Memoize option selection handler
+  const handleSelectOption = useCallback((optionValue: string) => {
+    setSelectedValue(optionValue);
     setShowOptions(false);
-    onChange(value);
-  }
+    onChange(optionValue);
+  }, [onChange]);
+
+  // Memoize toggle options handler
+  const handleToggleOptions = useCallback(() => {
+    setShowOptions((prev) => !prev);
+  }, []);
+
+  // Memoize focus handler
+  const handleFocus = useCallback(() => {
+    setShowOptions(true);
+  }, []);
+
+  // Memoize container className to avoid string concatenation on every render
+  const containerClassName = useMemo(() => {
+    const baseClasses = 'flex items-center justify-between gap-2 rounded-full shadow-inner shadow-zinc-300 py-2 px-4';
+    return errorMessage ? `${baseClasses} border border-red-500` : baseClasses;
+  }, [errorMessage]);
+
+  // Memoize wrapper className
+  const wrapperClassName = useMemo(() => {
+    const baseClasses = 'relative flex flex-col gap-2';
+    return className ? `${baseClasses} ${className}` : baseClasses;
+  }, [className]);
+
+  // Memoize chevron icon rotation class
+  const chevronClassName = useMemo(() => {
+    return `w-4 h-4 transition-transform duration-300 ${showOptions ? 'rotate-180' : ''}`;
+  }, [showOptions]);
+
+  // Memoize options list rendering
+  const optionsList = useMemo(() => {
+    if (isLoading) {
+      return (
+        <div className="flex items-center justify-center py-2">
+          <Loader2Icon className="w-4 h-4 animate-spin text-gray-500" />
+        </div>
+      );
+    }
+    
+    if (options.length === 0) {
+      return (
+        <div className="text-gray-500 text-center py-2">No options found</div>
+      );
+    }
+
+    return options.map((option) => (
+      <button 
+        key={option.value} 
+        value={option.value} 
+        onClick={() => handleSelectOption(option.value)} 
+        className="w-full text-left text-gray-500 hover:text-gray-700 hover:bg-gray-100 cursor-pointer py-2 px-4"
+      >
+        {option.label}
+      </button>
+    ));
+  }, [isLoading, options, handleSelectOption]);
 
   return (
-    <div className={`relative flex flex-col gap-2 ${className}`}>
+    <div className={wrapperClassName}>
       <label htmlFor={id} className="w-fit text-sm font-medium text-gray-700">
         {label}
       </label>
-      <div ref={elmRef} className="flex items-center justify-between gap-2 border border-gray-300 rounded-md p-2 focus-within:border-blue-500">
+      <div ref={elmRef} className={containerClassName}>
         <input
           ref={inputRef}
           type="text"
@@ -82,33 +146,32 @@ export default function SelectInput({ id, isSearchable, label, name, placeholder
           placeholder={placeholder}
           value={selectedValue}
           required={required}
-          onFocus={() => setShowOptions(true)}
-          onChange={(e) => onChangeKeyword(e.target.value)}
+          onFocus={handleFocus}
+          onChange={(e) => handleKeywordChange(e.target.value)}
           className="flex-1 outline-none"
-          readOnly={!isSearchable ? true : false}
+          readOnly={!isSearchable}
         />
-        <button type="button" onClick={() => setShowOptions(!showOptions)} className="text-gray-500 hover:text-gray-700 cursor-pointer">
-          <ChevronDownIcon className={`w-4 h-4 transition-transform duration-300 ${showOptions ? 'rotate-180' : ''}`} />
+        <button 
+          type="button" 
+          onClick={handleToggleOptions} 
+          className="text-gray-500 hover:text-gray-700 cursor-pointer"
+          aria-label={showOptions ? 'Close options' : 'Open options'}
+        >
+          <ChevronDownIcon className={chevronClassName} />
         </button>
       </div>
-      <small className="text-red-500">
-        {errorMessage && errorMessage}
-      </small>
+      {errorMessage && (
+        <small className="text-red-500">
+          {errorMessage}
+        </small>
+      )}
       {showOptions && (
-        <div className="absolute top-full left-0 w-full max-h-[230px] overflow-y-auto bg-white border border-gray-300 rounded-md shadow-md p-2 mt-2">
-          { isLoading ? (
-            <div className="flex items-center justify-center py-2">
-              <Loader2Icon className="w-4 h-4 animate-spin text-gray-500" />
-            </div>
-          ) : options.length > 0 ? options.map((option) => (
-            <button key={option.value} value={option.value} onClick={() => handleSelectOption(option.value)} className="w-full text-left text-gray-500 hover:text-gray-700 hover:bg-gray-100 cursor-pointer py-2 px-4">
-              {option.label}
-            </button>
-          )) : (
-            <div className="text-gray-500 text-center py-2">No options found</div>
-          )}
+        <div className="absolute top-full left-0 w-full max-h-[230px] overflow-y-auto bg-white border border-gray-300 rounded-md shadow-md p-2 mt-2 z-10">
+          {optionsList}
         </div>
       )}
     </div>
-  )
+  );
 }
+
+export default SelectInput;

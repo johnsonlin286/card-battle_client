@@ -18,7 +18,7 @@ export default function FormForgotPassword() {
         onChange={() => {}}
       />
       <div className="flex justify-end">
-        <Button type="submit" color="primary" className="w-1/3">Request Password Reset</Button>
+        <Button type="submit" color="primary" className="w-fit">Request Password Reset</Button>
       </div>
     </form>
   )
