@@ -4,7 +4,7 @@ import Link from "next/link";
 interface ButtonProps {
   children: React.ReactNode;
   type: 'button' | 'submit' | 'reset' | 'link';
-  color: 'primary' | 'secondary' | 'danger' | 'warning' | 'info' | 'success';
+  color: 'primary' | 'secondary' | 'danger' | 'warning' | 'info' | 'success' | 'none';
   block?: boolean;
   href?: string;
   disabled?: boolean;
@@ -20,6 +20,7 @@ const COLOR_CLASSES = {
   warning: 'border-2 border-yellow-500 hover:border-yellow-600',
   info: 'border-2 border-blue-500 hover:border-blue-600',
   success: 'border-2 border-green-500 hover:border-green-600',
+  none: 'border-2 border-transparent hover:border-transparent',
 } as const;
 
 const BLOCK_CLASSES = {
@@ -29,10 +30,11 @@ const BLOCK_CLASSES = {
   warning: 'bg-yellow-500 hover:bg-yellow-600 text-white',
   info: 'bg-blue-500 hover:bg-blue-600 text-white',
   success: 'bg-green-500 hover:border-green-600 text-white',
+  none: 'bg-transparent hover:bg-transparent text-black',
 } as const;
 
 // Base classes constant to avoid recreation
-const BASE_CLASSES = 'bg-white shadow-md rounded-full flex justify-center items-center cursor-pointer active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed p-1';
+const BASE_CLASSES = 'bg-white border border-zinc-300/20 shadow-md shadow-zinc-300 rounded-full flex justify-center items-center cursor-pointer active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed p-1';
 const SPAN_CLASSES = 'inline-block w-full h-full rounded-full px-6 py-1.5';
 
 function Button({ children, type, color, block, href, disabled, onClick, className }: ButtonProps) {

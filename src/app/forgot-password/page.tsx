@@ -5,8 +5,8 @@ import AuthLink from "@/components/AuthLink";
 export default function ForgotPasswordPage() {
   return (
     <section>
-      <div className="container flex justify-center items-center h-screen">
-        <Panel className="w-full max-w-2xl">
+      <div className="container flex justify-center items-center h-dvh">
+        <Panel className="w-full max-w-lg">
           <FormForgotPassword />
           <AuthLink />
         </Panel>

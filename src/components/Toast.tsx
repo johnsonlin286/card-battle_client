@@ -37,7 +37,7 @@ function Toast({ id, message, variant, duration }: Toast) {
       <div
         ref={toastRef}
         className={`
-          px-6 py-4 rounded-lg shadow-lg
+          px-6 py-4 rounded-full shadow-sm shadow-zinc-300
           min-w-[300px] max-w-[500px]
           ${variantStyles}
           transition-all duration-300 ease-in-out

@@ -15,7 +15,7 @@ export default function NavDrawer() {
   }
 
   return (
-    <div className={`w-full h-[calc(100vh-80px)] transition-all duration-300 ${isOpen ? 'max-w-60' : 'max-w-14'} bg-white shadow-md`}>
+    <div className={`w-full h-[calc(100vh-90px)] transition-all duration-300 ${isOpen ? 'max-w-60' : 'max-w-14'} bg-white shadow-sm shadow-zinc-300`}>
       <ul className="flex flex-col gap-5 py-4">
         <li className="w-full flex justify-end items-center">
           <button type="button" onClick={toggleDrawer} className="w-full flex justify-end items-center gap-2 cursor-pointer hover:bg-gray-100 py-2 px-4 rounded-md transition-all duration-300">

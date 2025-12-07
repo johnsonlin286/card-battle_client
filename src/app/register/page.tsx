@@ -21,7 +21,7 @@ export default function RegisterPage() {
 
   return (
     <section>
-      <div className="container flex justify-center items-center h-screen">
+      <div className="container flex justify-center items-center h-dvh">
         <Panel className="w-full max-w-2xl">
           <FormRegister />
           <AuthLink />

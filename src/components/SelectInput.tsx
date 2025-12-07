@@ -89,7 +89,7 @@ function SelectInput({ id, isSearchable, label, name, placeholder, options, valu
 
   // Memoize container className to avoid string concatenation on every render
   const containerClassName = useMemo(() => {
-    const baseClasses = 'flex items-center justify-between gap-2 rounded-full shadow-inner shadow-zinc-300 py-2 px-4';
+    const baseClasses = 'flex items-center justify-between gap-2 bg-white rounded-full border border-zinc-300/20 shadow-md shadow-zinc-300 py-2 px-4';
     return errorMessage ? `${baseClasses} border border-red-500` : baseClasses;
   }, [errorMessage]);
 
@@ -166,7 +166,7 @@ function SelectInput({ id, isSearchable, label, name, placeholder, options, valu
         </small>
       )}
       {showOptions && (
-        <div className="absolute top-full left-0 w-full max-h-[230px] overflow-y-auto bg-white border border-gray-300 rounded-md shadow-md p-2 mt-2 z-10">
+        <div className="absolute top-full left-0 w-full max-h-[230px] overflow-y-auto bg-white border border-zinc-300/20 rounded-2xl shadow-md shadow-zinc-300 p-2 mt-2 z-10">
           {optionsList}
         </div>
       )}

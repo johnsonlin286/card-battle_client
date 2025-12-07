@@ -1,5 +1,10 @@
 const API_URL = process.env.NEXT_PUBLIC_API_URL
 
+const NO_HEADER_ROUTES = [
+  '/login',
+  '/register',
+]
+
 const QUERY_KEYS = {
   ACCOUNT: 'account',
   STATE: 'state',
@@ -11,4 +16,4 @@ const MUTATION_KEYS = {
   LOGOUT: 'logout',
 }
 
-export { API_URL, QUERY_KEYS, MUTATION_KEYS }
+export { API_URL, NO_HEADER_ROUTES, QUERY_KEYS, MUTATION_KEYS }

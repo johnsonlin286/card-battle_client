@@ -186,7 +186,7 @@ export default function FormRegister() {
         isLoading={isLoadingStates}
       />
       <div className="flex justify-end">
-        <Button type="submit" color="primary" disabled={isRegistering} className="w-1/3">Register</Button>
+        <Button type="submit" color="primary" block disabled={isRegistering} className="w-1/3">Register</Button>
       </div>
     </form>
   )

@@ -122,7 +122,7 @@ export default function FormLogin() {
         errorMessage={formErrors?.password}
       />
       <div className="flex justify-end">
-        <Button type="submit" color="primary" disabled={isLoggingIn} className="w-1/3">Login</Button>
+        <Button type="submit" color="primary" block disabled={isLoggingIn} className="w-1/3">Login</Button>
       </div>
     </form>
   )

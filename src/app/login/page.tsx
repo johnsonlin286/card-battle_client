@@ -21,7 +21,7 @@ export default function LoginPage() {
 
   return (
     <section>
-      <div className="container flex justify-center items-center h-screen">
+      <div className="container flex justify-center items-center h-dvh">
         <Panel className="w-full max-w-md">
           <FormLogin />
           <AuthLink />
