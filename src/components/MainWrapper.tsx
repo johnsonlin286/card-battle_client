@@ -12,15 +12,16 @@ export default function MainWrapper({ children }: { children: React.ReactNode })
   const isNoHeaderRoute = NO_HEADER_ROUTES.includes(pathname);
 
   return (
-    <main className={`${isNoHeaderRoute ? 'pt-0' : 'pt-[90px]'}`}>
-      {!isNoHeaderRoute && <Navbar />}
-      <section className="flex justify-between items-start">
-        <NavDrawer />
-        <div className="container px-5">
+    <>
+      <main className={`${isNoHeaderRoute ? 'pt-0' : 'pt-[90px]'}`}>
+        {!isNoHeaderRoute && <Navbar />}
+        <section className="flex justify-between items-start">
+          <NavDrawer />
           {children}
-        </div>
-      </section>
-      <Toaster />
-    </main>
+        </section>
+        <Toaster />
+      </main>
+      <div id="portal" />
+    </>
   )
 }

@@ -125,7 +125,7 @@ function SelectInput({ id, isSearchable, label, name, placeholder, options, valu
         key={option.value} 
         value={option.value} 
         onClick={() => handleSelectOption(option.value)} 
-        className="w-full text-left text-gray-500 hover:text-gray-700 hover:bg-gray-100 cursor-pointer py-2 px-4"
+        className="w-full rounded-full text-left text-gray-500 hover:text-gray-700 hover:bg-gray-100 cursor-pointer py-2 px-4"
       >
         {option.label}
       </button>

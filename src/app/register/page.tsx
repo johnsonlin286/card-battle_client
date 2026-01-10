@@ -20,13 +20,11 @@ export default function RegisterPage() {
   }, [isAuthenticated]);
 
   return (
-    <section>
-      <div className="container flex justify-center items-center h-dvh">
-        <Panel className="w-full max-w-2xl">
-          <FormRegister />
-          <AuthLink />
-        </Panel>
-      </div>
+    <section className="container flex justify-center items-center h-dvh">
+      <Panel className="w-full max-w-2xl">
+        <FormRegister />
+        <AuthLink />
+      </Panel>
     </section>
   )
 }

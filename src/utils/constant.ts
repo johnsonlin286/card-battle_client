@@ -8,6 +8,7 @@ const NO_HEADER_ROUTES = [
 const QUERY_KEYS = {
   ACCOUNT: 'account',
   STATE: 'state',
+  COLLECTION: 'collection',
 }
 
 const MUTATION_KEYS = {

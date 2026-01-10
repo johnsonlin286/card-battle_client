@@ -20,13 +20,11 @@ export default function LoginPage() {
   }, [isAuthenticated]);
 
   return (
-    <section>
-      <div className="container flex justify-center items-center h-dvh">
-        <Panel className="w-full max-w-md">
-          <FormLogin />
-          <AuthLink />
-        </Panel>
-      </div>
+    <section className="container flex justify-center items-center h-dvh mx-auto">
+      <Panel className="w-full max-w-md">
+        <FormLogin />
+        <AuthLink />
+      </Panel>
     </section>
   )
 }
