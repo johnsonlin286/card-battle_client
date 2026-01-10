@@ -30,7 +30,7 @@ export default function NavDrawer() {
           </Link>
         </li>
         <li className="w-full flex justify-start items-center overflow-hidden">
-          <Link href="/collection" className="flex items-center gap-2 w-2xs hover:bg-gray-100 py-2 px-4">
+          <Link href="/collection/cards" className="flex items-center gap-2 w-2xs hover:bg-gray-100 py-2 px-4">
             <BookImageIcon className="inline-block w-6 h-6" />
             <span className={`transition-opacity duration-200 ${isOpen ? 'opacity-100' : 'opacity-0'}`}>Collection</span>
           </Link>

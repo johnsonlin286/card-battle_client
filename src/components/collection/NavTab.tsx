@@ -1,6 +1,9 @@
-import { memo, useState } from "react";
-import BtnTab from "../BtnTab";
+'use client';
 
+import { memo, useState, useEffect } from "react";
+import { useRouter, usePathname } from 'next/navigation';
+
+import BtnTab from "@/components/BtnTab";
 interface NavTabProps {
   navItems: {
     label: string;
@@ -10,18 +13,19 @@ interface NavTabProps {
 }
 
 function NavTab({ navItems, onTabChange }: NavTabProps) {
-  const [activeTab, setActiveTab] = useState('cards');
+  const router = useRouter();
+  const pathname = usePathname();
+  const [activeTab, setActiveTab] = useState(pathname.split('/')[2]);
 
-  const handleClick = (value: string) => {
-    setActiveTab(value);
-    onTabChange?.(value);
-  };
+  useEffect(() => {
+    setActiveTab(pathname.split('/')[2]);
+  }, [pathname]);
   
   return (
     <div className="sticky top-0 z-10">
       <nav className="flex justify-stretch items-center gap-3 bg-white shadow-sm shadow-zinc-300 py-4 px-5">
         {navItems.map((item, index) => (
-          <BtnTab key={index} onClick={() => handleClick(item.value)} isActive={activeTab === item.value}>
+          <BtnTab key={index} onClick={() => router.push(`/collection/${item.value}`)} isActive={activeTab === item.value}>
             {item.label}
           </BtnTab>
         ))}
