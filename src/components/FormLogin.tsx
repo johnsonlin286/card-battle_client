@@ -45,7 +45,8 @@ export default function FormLogin() {
         duration: 3000,
       });
       setIsAuthenticated(true);
-      Cookies.set('cardBattleToken', (data as loginUserResponse).token, { expires: (data as loginUserResponse).expires_at });
+      Cookies.set('cardBattleToken', (data as loginUserResponse).token);
+      Cookies.set('cardBattleRefreshToken', (data as loginUserResponse).refresh_token, { expires: 7 });
       nextRouter.push('/dashboard');
     },
     onError: (error) => {

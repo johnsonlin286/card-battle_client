@@ -29,7 +29,7 @@ type loginUserPayload = {
 
 type loginUserResponse = {
   token: string;
-  expires_at: number;
+  refresh_token: string;
 }
 
 type Toast = {

@@ -7,7 +7,8 @@ export const fetchCollections = async () => {
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': process.env.NEXT_PUBLIC_API_KEY || '',
-      'Authorization': `${Cookies.get('cardBattleToken')}`
+      'Authorization': `${Cookies.get('cardBattleToken')}`,
+      'x-refresh-token': `${Cookies.get('cardBattleRefreshToken')}`
     },
   })
   const data = await response.json()

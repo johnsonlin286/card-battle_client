@@ -1,18 +1,6 @@
 import { API_URL } from '@/utils/constant'
 import Cookies from 'js-cookie'
 
-export const getAllUser = async () => {
-  const response = await fetch(`${API_URL}/user/all`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.NEXT_PUBLIC_API_KEY || '',
-    },
-  })
-  const data = await response.json()
-  return data
-}
-
 export const registerUser = async (payload: registerUserPayload) => {
   const response = await fetch(`${API_URL}/user/create`, {
     method: 'POST',
@@ -40,10 +28,7 @@ export const loginUser = async (payload: loginUserPayload): Promise<loginUserRes
   })
   const data = await response.json();
   if (!response.ok) {
-    return {
-      success: data.success,
-      message: data.error,
-    }
+    throw new Error(data.error);
   }
   return data.data;
 }
@@ -58,7 +43,8 @@ export const logoutUser = async () => {
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': process.env.NEXT_PUBLIC_API_KEY || '',
-      'Authorization': `${Cookies.get('cardBattleToken')}`
+      'Authorization': `${Cookies.get('cardBattleToken')}`,
+      'x-refresh-token': `${Cookies.get('cardBattleRefreshToken')}`
     },
   })
   const data = await response.json()
@@ -77,7 +63,8 @@ export const fetchAccountData = async () => {
     headers: {
       'Content-Type': 'application/json',
       'x-api-key': process.env.NEXT_PUBLIC_API_KEY || '',
-      'Authorization': `${Cookies.get('cardBattleToken')}`
+      'Authorization': `${Cookies.get('cardBattleToken')}`,
+      'x-refresh-token': `${Cookies.get('cardBattleRefreshToken')}`
     },
   })
   const data = await response.json()

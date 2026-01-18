@@ -18,6 +18,7 @@ export default function useLogout() {
     clearIsAuthenticated();
     clearAccount();
     Cookies.remove('cardBattleToken');
+    Cookies.remove('cardBattleRefreshToken');
   }
 
   const { mutateAsync: logoutAsync, isPending: isLoggingOut } = useMutation({
