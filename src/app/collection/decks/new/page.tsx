@@ -1,21 +1,51 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { PencilIcon } from 'lucide-react';
+import { useQuery } from '@tanstack/react-query';
 
+import { QUERY_KEYS } from '@/utils/constant';
+import { fetchCharacters } from '@/services/collections';
 import Breadcrumb from '@/components/Breadcrumb';
 import TextInput from '@/components/TextInput';
 import Button from '@/components/Button';
+import Modal from '@/components/Modal';
 
 const BREADCRUMB_ITEMS = [
   { label: 'Decks', href: '/collection/decks' },
   { label: 'New Deck' },
 ];
 
+interface Companion {
+  character: string;
+  skills: string[];
+}
+
+type ModalType = 'character' | 'skill' | 'resource' | 'support';
+
 export default function CollectionDecksNewPage() {
   const [deckName, setDeckName] = useState<string>('New Deck 1');
+  const [modalType, setModalType] = useState<ModalType | undefined>();
+  const [characters, setCharacters] = useState<CharacterDto[]>([]);
+  const [companionA, setCompanionA] = useState<Companion | null>(null);
+  const [companionB, setCompanionB] = useState<Companion | null>(null);
 
+  const { data: charactersData,  } = useQuery({
+    queryKey: [QUERY_KEYS.COLLECTION_CHARACTERS],
+    queryFn: fetchCharacters,
+    enabled: modalType === 'character',
+  })
 
+  useEffect(() => {
+    if (charactersData) {
+      if ('error' in charactersData) {
+        // TODO: Handle error
+      } else {
+        const { data } = charactersData as CharactersResponse;
+        setCharacters(data);
+      }
+    }
+  }, [charactersData])
 
   return (
     <div className="flex flex-col gap-6 px-6 pb-10">
@@ -28,7 +58,7 @@ export default function CollectionDecksNewPage() {
             <h2 className="text-2xl font-bold">
               Companion A
             </h2>
-            <Button type="button" color="none">
+            <Button type="button" color="none" onClick={() => setModalType('character')}>
               <PencilIcon className="w-4 h-4" />
             </Button>
           </div>
@@ -80,6 +110,11 @@ export default function CollectionDecksNewPage() {
           Create Deck
         </Button>
       </div>
+      <Modal size="lg" isOpen={modalType !== undefined } onClose={() => setModalType(undefined)}>
+        {characters.length > 0 && (
+          <pre>{JSON.stringify(characters, null, 2)}</pre>
+        )}
+      </Modal>
     </div>
   )
 }

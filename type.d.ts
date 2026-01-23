@@ -55,3 +55,14 @@ type AccountType = {
   created_at: string;
   updated_at: string;
 }
+
+type CharacterDto = {
+  id: string;
+  image: string;
+  quantity: number;
+}
+
+type CharactersResponse = {
+  success: boolean;
+  data: CharacterDto[];
+}

@@ -9,6 +9,7 @@ const QUERY_KEYS = {
   ACCOUNT: 'account',
   STATE: 'state',
   COLLECTION: 'collection',
+  COLLECTION_CHARACTERS: 'collection-characters',
 }
 
 const MUTATION_KEYS = {

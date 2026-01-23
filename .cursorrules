@@ -1,0 +1,35 @@
+# Cursor Rules for Card Battle Client
+
+## Project Context
+This is a Next.js 15 project using:
+- React 19
+- TypeScript
+- Tailwind CSS
+- TanStack Query (React Query)
+- Zustand for state management
+- React Hook Form with Zod validation
+
+## Code Style
+- Use TypeScript for all files
+- Use functional components with hooks
+- Follow Next.js App Router conventions
+- Use path aliases (@/*) for imports from src directory
+- Prefer named exports over default exports when possible
+
+## File Structure
+- Components in `src/components/`
+- Pages/routes in `src/app/`
+- Hooks in `src/hooks/`
+- Services/API calls in `src/services/`
+- State management in `src/store/`
+- Types in `type.d.ts` at root
+
+## Import Conventions
+- Use `@/` prefix for imports from src directory
+- Group imports: external packages, then internal modules
+- Use absolute imports with path aliases
+
+## TypeScript
+- Enable strict mode (already configured)
+- Use proper types for all props and functions
+- Define shared types in `type.d.ts`
