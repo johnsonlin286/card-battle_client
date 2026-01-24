@@ -60,9 +60,16 @@ type CharacterDto = {
   id: string;
   image: string;
   quantity: number;
+  in_used: number;
 }
 
 type CharactersResponse = {
   success: boolean;
   data: CharacterDto[];
+}
+
+// New Deck
+type Companion = {
+  character: string;
+  skills: string[];
 }

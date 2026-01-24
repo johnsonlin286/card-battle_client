@@ -51,7 +51,7 @@ export default function CollectionCardsPage() {
           
           // Find and add all skills that belong to this character
           skills.forEach((skill: any) => {
-            if (character.id === skill.character_id) {
+            if (character.character_id === skill.character_id) {
               characterAndSkills.push(skill);
             }
           });

@@ -2,7 +2,7 @@ import { createPortal } from 'react-dom';
 import { XIcon } from 'lucide-react';
 
 interface ModalProps {
-  size?: 'sm' | 'md' | 'lg';
+  size?: 'xs' | 'sm' | 'md' | 'lg' | 'xl';
   isOpen: boolean;
   onClose: () => void;
   children: React.ReactNode;
@@ -11,9 +11,11 @@ interface ModalProps {
 
 export default function Modal({ size = 'md', isOpen, onClose, children, dismissible = true }: ModalProps) {
   const sizeClasses = {
+    xs: 'md:max-w-sm',
     sm: 'md:max-w-md',
     md: 'md:max-w-lg',
     lg: 'md:max-w-xl',
+    xl: 'md:max-w-2xl',
   }[size];
 
   if (!isOpen) return null;

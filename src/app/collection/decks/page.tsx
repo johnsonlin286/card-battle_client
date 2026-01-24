@@ -1,10 +1,9 @@
 'use client';
 
-import { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { Loader, Plus } from 'lucide-react';
+import { useState } from 'react';
+import { Plus } from 'lucide-react';
 
-import DeckItem from '@/components/deck/deckItem';
+import DeckItem from '@/components/deck/DeckItem';
 import Button from '@/components/Button';
 
 export default function CollectionDecksPage() {
@@ -15,9 +14,6 @@ export default function CollectionDecksPage() {
   }
 
   return (
-    // <div className='w-full h-full flex justify-center items-center'>
-    //   <Loader className='w-10 h-10 text-zinc-500 animate-spin' />
-    // </div>
     <div className="relative w-full h-full">
       {decks.length > 0 ? (
         <>
