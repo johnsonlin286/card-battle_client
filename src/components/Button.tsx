@@ -8,8 +8,9 @@ interface ButtonProps {
   block?: boolean;
   href?: string;
   disabled?: boolean;
-  onClick?: () => void;
+  onClick: () => void;
   className?: string;
+  spanStyle?: string;
 }
 
 // Move color maps outside component to prevent recreation on every render
@@ -37,7 +38,7 @@ const BLOCK_CLASSES = {
 const BASE_CLASSES = 'bg-white border border-zinc-300/20 shadow-md shadow-zinc-300 rounded-full flex justify-center items-center cursor-pointer active:scale-95 transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed p-1';
 const SPAN_CLASSES = 'inline-block w-full h-full rounded-full px-6 py-1.5 transition-colors duration-200';
 
-function Button({ children, type, color, block, href, disabled, onClick, className }: ButtonProps) {
+function Button({ children, type, color, block, href, disabled, onClick, className, spanStyle }: ButtonProps) {
   // Memoize the style class based on color and block props
   const buttonStyle = useMemo(() => {
     return block ? BLOCK_CLASSES[color] : COLOR_CLASSES[color];
@@ -49,7 +50,7 @@ function Button({ children, type, color, block, href, disabled, onClick, classNa
   }, [className]);
 
   const spanClassName = useMemo(() => {
-    return `${buttonStyle} ${SPAN_CLASSES}`;
+    return `${buttonStyle} ${SPAN_CLASSES} ${spanStyle}`;
   }, [buttonStyle]);
 
   if (type === 'link') {

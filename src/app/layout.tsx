@@ -1,7 +1,6 @@
 import { ReactNode } from "react";
 import { Geist, Geist_Mono } from "next/font/google";
 
-import { QueryProvider } from '@/components/QueryProvider'
 import MainWrapper from "@/components/MainWrapper";
 
 import "./globals.css";
@@ -22,21 +21,19 @@ export const metadata = {
 };
 
 
-export default function RootLayout({ 
-  children 
-}: { 
-  children: ReactNode 
+export default function RootLayout({
+  children
+}: {
+  children: ReactNode
 }) {
   return (
     <html lang="en">
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
-        <QueryProvider>
-          <MainWrapper>
-            {children}
-          </MainWrapper>
-        </QueryProvider>
+        <MainWrapper>
+          {children}
+        </MainWrapper>
       </body>
     </html>
   );

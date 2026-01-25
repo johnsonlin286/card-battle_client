@@ -58,6 +58,7 @@ type AccountType = {
 
 type CharacterDto = {
   id: string;
+  character_id: string;
   image: string;
   quantity: number;
   in_used: number;
@@ -66,6 +67,19 @@ type CharacterDto = {
 type CharactersResponse = {
   success: boolean;
   data: CharacterDto[];
+}
+
+type SkillDto = {
+  id: string;
+  skill_id: string;
+  image: string;
+  quantity: number;
+  in_used: number;
+}
+
+type SkillsResponse = {
+  success: boolean;
+  data: SkillDto[];
 }
 
 // New Deck

@@ -29,10 +29,10 @@ export default function Navbar() {
     if (accountData) {
       setAccount(accountData);
     }
-  }, [accountData]);
+  }, [accountData, setAccount]);
 
   return (
-    <nav className="fixed top-0 left-0 right-0 bg-white shadow-sm shadow-zinc-300 z-50">
+    <nav className="fixed top-0 left-0 right-0 bg-white shadow-sm shadow-zinc-300 z-40">
       <div className="container flex justify-between items-center mx-auto px-4 py-5">
         <h1 className="text-2xl font-bold">Navbar</h1>
         <ul className="flex items-center gap-4">

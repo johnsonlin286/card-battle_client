@@ -14,17 +14,26 @@ function Toast({ id, message, variant, duration }: Toast) {
   }, []);
 
   useEffect(() => {
+    const currentRef = toastRef.current;
+    
+    const handleTransitionEnd = () => {
+      removeToast(id || '');
+    };
+
     const timeout = setTimeout(() => {
       setIsMounted(false);
-      if (toastRef.current) {
-        toastRef.current.addEventListener('transitionend', () => {
-          removeToast(id || '');
-        }, { once: true });
+      if (currentRef) {
+        currentRef.addEventListener('transitionend', handleTransitionEnd, { once: true });
       }
-    }, duration)
+    }, duration);
 
-    return () => clearTimeout(timeout);
-  }, [duration])
+    return () => {
+      clearTimeout(timeout);
+      if (currentRef) {
+        currentRef.removeEventListener('transitionend', handleTransitionEnd);
+      }
+    };
+  }, [duration, id, removeToast])
 
   const variantStyles = {
     success: 'bg-green-300 text-green-800',

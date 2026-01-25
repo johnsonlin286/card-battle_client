@@ -28,3 +28,22 @@ export const fetchCharacters = async (): Promise<CharactersResponse | ErrorRespo
   const data = await response.json()
   return data
 }
+
+export const fetchCharacterSkills = async (characterId: string): Promise<SkillsResponse | ErrorResponse> => {
+  if (!characterId) return { success: false, message: 'Character ID is required' }
+  try {
+    const response = await fetch(`${API_URL}/collection/character/${characterId}/skills`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.NEXT_PUBLIC_API_KEY || '',
+        'Authorization': `${Cookies.get('cardBattleToken')}`,
+        'x-refresh-token': `${Cookies.get('cardBattleRefreshToken')}`
+      },
+    })
+    const data = await response.json()
+    return data
+  } catch (error: any) {
+    return { success: false, message: error.message }
+  }
+}

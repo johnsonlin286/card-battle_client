@@ -32,5 +32,6 @@ body {
 }
 
 .shadow-inset {
-  box-shadow: inset 0 0 8px oklch(87.1% 0.006 286.286);
+  /* Replaced oklch() with hex - Chrome 144 may have oklch rendering bug */
+  box-shadow: inset 0 0 8px #d4d4d8;
 }

@@ -1,7 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useMemo } from 'react';
+import { useQuery } from '@tanstack/react-query';
 
+import { QUERY_KEYS } from '@/utils/constant';
+import { fetchCharacters } from '@/services/collections';
 import Breadcrumb from '@/components/Breadcrumb';
 import TextInput from '@/components/TextInput';
 import Button from '@/components/Button';
@@ -20,6 +23,22 @@ export default function CollectionDecksNewPage() {
   const [modalType, setModalType] = useState<ModalType | undefined>();
   const [companionA, setCompanionA] = useState<Companion | null>(null);
   const [companionB, setCompanionB] = useState<Companion | null>(null);
+
+  // const { data: charactersData, isLoading: isLoadingCharacters } = useQuery({
+  //   queryKey: [QUERY_KEYS.COLLECTION_CHARACTERS],
+  //   queryFn: fetchCharacters,
+  // });
+
+  // // Derive characters from query data instead of redundant state
+  // const characters = useMemo(() => {
+  //   if (charactersData) {
+  //     const { success, data } = charactersData as CharactersResponse;
+  //     if (success) {
+  //       return data as CharacterDto[];
+  //     }
+  //   }
+  //   return [];
+  // }, [charactersData]);
 
   return (
     <div className="flex flex-col gap-6 px-6 pb-10">
@@ -45,16 +64,16 @@ export default function CollectionDecksNewPage() {
       </div>
       <hr className="border-zinc-300" />
       <div className="flex justify-end gap-2">
-        <Button type="button" color="none">
+        <Button type="button" color="none" onClick={() => console.log('cancel')}>
           Cancel
         </Button>
-        <Button type="button" color="primary">
+        <Button type="button" color="primary" onClick={() => console.log('create deck')}>
           Create Deck
         </Button>
       </div>
       <CompanionPick
         name={`Companion ${modalType === 'companion-a' ? 'A' : modalType === 'companion-b' ? 'B' : ''}`}
-        data={modalType === 'companion-a' ? companionA : modalType === 'companion-b' ? companionB : null}
+        // characters={characters}
         isOpen={modalType === 'companion-a' || modalType === 'companion-b'}
         onClose={() => setModalType(undefined)}
         onSubmit={() => null}
