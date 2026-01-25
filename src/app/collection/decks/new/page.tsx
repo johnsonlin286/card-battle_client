@@ -9,7 +9,7 @@ import Breadcrumb from '@/components/Breadcrumb';
 import TextInput from '@/components/TextInput';
 import Button from '@/components/Button';
 import CardsGroup from '@/components/deck/new/CardsGroup';
-import CompanionPick from '@/components/deck/new/CompanionPick';
+import { CompanionPick } from '@/components/deck/new/companionModal';
 
 const BREADCRUMB_ITEMS = [
   { label: 'Decks', href: '/collection/decks' },

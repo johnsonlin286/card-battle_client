@@ -1,6 +1,6 @@
 import Image from "next/image";
 
-interface CardOptionProps {
+interface CharacterOptionProps {
   id: string;
   name: string;
   image: string;
@@ -11,7 +11,7 @@ interface CardOptionProps {
   className?: string;
 }
 
-export default function CardOption({ id, name, image, quantity, in_used, disabled, onClick, className }: CardOptionProps) {
+export default function CharacterOption({ id, name, image, quantity, in_used, disabled, onClick, className }: CharacterOptionProps) {
   return (
     <label role="button" onClick={onClick} className={`cursor-pointer ${className}`}>
       <input type="radio" name={name} id={id} value={id} className="hidden peer" disabled={disabled} />
