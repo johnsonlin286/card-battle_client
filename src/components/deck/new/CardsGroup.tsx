@@ -10,7 +10,7 @@ interface CardsGroupProps {
 
 export default function CardsGroup({ title, onClick, children }: CardsGroupProps) {
   return (
-    <div className="flex flex-col gap-4">
+    <div className="flex flex-col gap-4 w-full">
       <div className="flex items-center gap-2">
         <h2 className="text-2xl font-bold">
           {title}
@@ -19,7 +19,7 @@ export default function CardsGroup({ title, onClick, children }: CardsGroupProps
           <PencilIcon className="w-4 h-4" />
         </Button>
       </div>
-      <div className="flex gap-4 rounded-2xl min-h-32 shadow-inset p-4">
+      <div className="w-full h-32 rounded-2xl shadow-inset overflow-x-auto overflow-y-hidden p-2.5">
         {children}
       </div>
     </div>

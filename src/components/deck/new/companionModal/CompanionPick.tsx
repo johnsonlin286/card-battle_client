@@ -2,10 +2,9 @@ import { useState, useEffect, useCallback, useMemo } from "react";
 import { useQuery } from "@tanstack/react-query";
 
 import { QUERY_KEYS } from "@/utils/constant";
-import { fetchCharacters, fetchCharacterSkills } from "@/services/collections";
+import { fetchCollectionCards, fetchCharacterSkills } from "@/services/collections";
 import { useToastStore } from "@/store/toast";
 import Modal from "@/components/Modal";
-import Button from "@/components/Button";
 import Steps from "./Steps";
 import CharacterList from "./CharacterList";
 import SkillList from "./SkillList";
@@ -14,13 +13,12 @@ interface CompanionPickProps {
   name: string;
   isOpen: boolean;
   onClose: () => void;
-  onSubmit: () => void;
+  onSubmit: ({name, companion  }: { name: string, companion: PickedCompanion }) => void;
 }
 
 export default function CompanionPick({ name, isOpen, onClose, onSubmit }: CompanionPickProps) {
   const [finishedStep, setFinishedStep] = useState<number>(0);
-  const [selectedCompanion, setSelectedCompanion] = useState<string | null>(null);
-  const { addToast } = useToastStore();
+  const [selectedCompanion, setSelectedCompanion] = useState<SelectedCharacter | null>(null);
 
   // Reset state when modal closes
   useEffect(() => {
@@ -32,29 +30,29 @@ export default function CompanionPick({ name, isOpen, onClose, onSubmit }: Compa
 
   const { data: charactersData, isLoading: isLoadingCharacters } = useQuery({
     queryKey: [QUERY_KEYS.COLLECTION_CHARACTERS],
-    queryFn: fetchCharacters,
+    queryFn: () => fetchCollectionCards('characters'),
     enabled: isOpen,
   });
 
   const characters = useMemo(() => {
     if (charactersData) {
-      const { success, data } = charactersData as CharactersResponse;
+      const { success, data } = charactersData as CardsResponse;
       if (success) {
-        return data as CharacterDto[];
+        return data as CardDto[];
       }
     }
     return [];
   }, [charactersData]);
 
-  const handleSelectCompanion = useCallback((id: string) => {
-    const character = characters.find((c) => c.character_id === id);
-    if (!character || character.in_used >= character.quantity) return;
-    setSelectedCompanion(character.character_id);
-  }, [characters, selectedCompanion]);
+  const handleSubmitCompanion = useCallback((character: SelectedCharacter) => {
+    if (!character) return;
+    setSelectedCompanion(character);
+    setFinishedStep(1);
+  }, []);
 
   const { data: skillsData, isLoading: isLoadingSkills } = useQuery({
-    queryKey: [QUERY_KEYS.COLLECTION_CHARACTER_SKILLS, selectedCompanion],
-    queryFn: () => fetchCharacterSkills(selectedCompanion || ''),
+    queryKey: [QUERY_KEYS.COLLECTION_CHARACTER_SKILLS, selectedCompanion?.character_id],
+    queryFn: () => fetchCharacterSkills(selectedCompanion?.character_id || ''),
     enabled: !!selectedCompanion && finishedStep === 1,
   });
 
@@ -68,18 +66,19 @@ export default function CompanionPick({ name, isOpen, onClose, onSubmit }: Compa
     return [];
   }, [skillsData]);
 
-  const handleNextStep = () => {
-    if (finishedStep === 0) {
-      setFinishedStep(1);
-    } else if (finishedStep === 1) {
-      setFinishedStep(2);
-      // onSubmit();
-    }
-  };
+  const handleSubmitSkills = useCallback((skills: SelectedSkill[]) => {
+    if (!selectedCompanion || skills.length === 0) return;
+    onSubmit({ name, companion: { character: selectedCompanion, skills } });
+    handleClose();
+  }, [selectedCompanion]);
 
   const handleClose = useCallback(() => {
     onClose();
   }, [onClose]);
+
+  useEffect(() => {
+    console.log(selectedCompanion);
+  }, [selectedCompanion]);
 
   if (!isOpen) return null;
 
@@ -93,27 +92,18 @@ export default function CompanionPick({ name, isOpen, onClose, onSubmit }: Compa
             name={name}
             isLoading={isLoadingCharacters}
             characters={characters}
-            onSelect={handleSelectCompanion}
+            onSubmit={handleSubmitCompanion}
+            onCancel={handleClose}
           />
         )}
         {finishedStep >= 1 && (
-          <SkillList isLoading={isLoadingSkills} skills={skills} />
+          <SkillList
+            isLoading={isLoadingSkills}
+            skills={skills}
+            onSubmit={handleSubmitSkills}
+            onCancel={() => setFinishedStep(0)}
+          />
         )}
-        <div className="flex justify-end items-center gap-2">
-          {finishedStep === 0 && (
-            <Button type="button" color="none" onClick={handleClose}>
-              Cancel
-            </Button>
-          )}
-          {finishedStep === 1 && (
-            <Button type="button" color="none" onClick={() => setFinishedStep(0)}>
-              Back
-            </Button>
-          )}
-          <Button type="button" color="primary" onClick={handleNextStep}>
-            Next
-          </Button>
-        </div>
       </div>
     </Modal>
   )

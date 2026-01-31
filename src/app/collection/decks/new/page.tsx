@@ -1,15 +1,14 @@
 'use client';
 
-import { useState, useMemo } from 'react';
-import { useQuery } from '@tanstack/react-query';
+import { useState } from 'react';
+import Image from 'next/image';
 
-import { QUERY_KEYS } from '@/utils/constant';
-import { fetchCharacters } from '@/services/collections';
+import { CompanionPick } from '@/components/deck/new/companionModal';
 import Breadcrumb from '@/components/Breadcrumb';
 import TextInput from '@/components/TextInput';
 import Button from '@/components/Button';
 import CardsGroup from '@/components/deck/new/CardsGroup';
-import { CompanionPick } from '@/components/deck/new/companionModal';
+import ViewCard from '@/components/ViewCard';
 
 const BREADCRUMB_ITEMS = [
   { label: 'Decks', href: '/collection/decks' },
@@ -21,36 +20,57 @@ type ModalType = 'companion-a' | 'companion-b' | 'skill' | 'resource' | 'support
 export default function CollectionDecksNewPage() {
   const [deckName, setDeckName] = useState<string>('New Deck 1');
   const [modalType, setModalType] = useState<ModalType | undefined>();
-  const [companionA, setCompanionA] = useState<Companion | null>(null);
-  const [companionB, setCompanionB] = useState<Companion | null>(null);
+  const [companionA, setCompanionA] = useState<PickedCompanion | null>(null);
+  const [companionB, setCompanionB] = useState<PickedCompanion | null>(null);
+  const [selectedCard, setSelectedCard] = useState<string | null>(null);
 
-  // const { data: charactersData, isLoading: isLoadingCharacters } = useQuery({
-  //   queryKey: [QUERY_KEYS.COLLECTION_CHARACTERS],
-  //   queryFn: fetchCharacters,
-  // });
-
-  // // Derive characters from query data instead of redundant state
-  // const characters = useMemo(() => {
-  //   if (charactersData) {
-  //     const { success, data } = charactersData as CharactersResponse;
-  //     if (success) {
-  //       return data as CharacterDto[];
-  //     }
-  //   }
-  //   return [];
-  // }, [charactersData]);
+  const handleSubmitCompanion = ({ name, companion }: { name: string, companion: PickedCompanion }) => {
+    if (name === 'Companion A') {
+      setCompanionA(companion);
+    } else if (name === 'Companion B') {
+      setCompanionB(companion);
+    }
+  }
 
   return (
     <div className="flex flex-col gap-6 px-6 pb-10">
       <Breadcrumb items={BREADCRUMB_ITEMS} />
-      <TextInput id="name" label="Deck Name" type="text" name="name" value={deckName} placeholder="Enter your deck name" required={true} onChange={(value) => null} className="w-full max-w-md" />
+      <TextInput id="name" label="Deck Name" type="text" name="name" value={deckName} placeholder="Enter your deck name" required={true} onChange={setDeckName} className="w-full max-w-md" />
       <hr className="border-zinc-300" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         <CardsGroup title="Companion A" onClick={() => setModalType('companion-a')}>
-          
+          {companionA && (
+            <div className="h-full flex flex-nowrap items-center gap-2">
+              <div role="button" onClick={() => setSelectedCard(companionA.character.image)} className="relative w-auto h-full cursor-pointer">
+                <Image src={companionA.character.image} alt={companionA.character.character_id} width={0} height={0} sizes='100%' loading='lazy' className="w-auto h-full object-contain rounded-lg" />
+              </div>
+              {companionA.skills.map((skill) => (
+                <div key={skill.skill_id} role="button" onClick={() => setSelectedCard(skill.image)} className="relative w-auto h-full cursor-pointer">
+                  <Image src={skill.image} alt={skill.skill_id} width={0} height={0} sizes='100%' loading='lazy' className='w-auto h-full object-contain rounded-lg' />
+                  <span className="absolute bottom-0 right-0 w-fit min-w-10 h-fit bg-black/80 text-white text-sm text-center py-0.5 px-1.5">
+                    {skill.quantity}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </CardsGroup>
         <CardsGroup title="Companion B" onClick={() => setModalType('companion-b')}>
-          
+          {companionB && (
+            <div className="h-full flex flex-nowrap items-center gap-2">
+              <div role="button" onClick={() => setSelectedCard(companionB.character.image)} className="relative w-auto h-full cursor-pointer">
+                <Image src={companionB.character.image} alt={companionB.character.character_id} width={0} height={0} sizes='100%' loading='lazy' className="w-auto h-full object-contain rounded-lg" />
+              </div>
+              {companionB.skills.map((skill) => (
+                <div key={skill.skill_id} role="button" onClick={() => setSelectedCard(skill.image)} className="relative w-auto h-full cursor-pointer">
+                  <Image src={skill.image} alt={skill.skill_id} width={0} height={0} sizes='100%' loading='lazy' className='w-auto h-full object-contain rounded-lg' />
+                  <span className="absolute bottom-0 right-0 w-fit min-w-10 h-fit bg-black/80 text-white text-sm text-center py-0.5 px-1.5">
+                    {skill.quantity}
+                  </span>
+                </div>
+              ))}
+            </div>
+          )}
         </CardsGroup>
       </div>
       <hr className="border-zinc-300" />
@@ -59,7 +79,7 @@ export default function CollectionDecksNewPage() {
 
         </CardsGroup>
         <CardsGroup title="Resources" onClick={() => setModalType('resource')}>
-          
+
         </CardsGroup>
       </div>
       <hr className="border-zinc-300" />
@@ -73,11 +93,11 @@ export default function CollectionDecksNewPage() {
       </div>
       <CompanionPick
         name={`Companion ${modalType === 'companion-a' ? 'A' : modalType === 'companion-b' ? 'B' : ''}`}
-        // characters={characters}
         isOpen={modalType === 'companion-a' || modalType === 'companion-b'}
         onClose={() => setModalType(undefined)}
-        onSubmit={() => null}
+        onSubmit={handleSubmitCompanion}
       />
+      <ViewCard image={selectedCard || undefined} isOpen={!!selectedCard} onClose={() => setSelectedCard(null)} />
     </div>
   )
 }
