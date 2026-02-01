@@ -15,21 +15,25 @@ export const fetchCollections = async () => {
   return data
 }
 
-export const fetchCharacters = async (): Promise<CharactersResponse | ErrorResponse> => {
-  const response = await fetch(`${API_URL}/collection/characters`, {
-    method: 'GET',
-    headers: {
-      'Content-Type': 'application/json',
-      'x-api-key': process.env.NEXT_PUBLIC_API_KEY || '',
-      'Authorization': `${Cookies.get('cardBattleToken')}`,
-      'x-refresh-token': `${Cookies.get('cardBattleRefreshToken')}`
-    },
-  })
-  const data = await response.json()
-  return data
+export const fetchCharacters = async (): Promise<CardsResponse | ErrorResponse> => {
+  try {
+    const response = await fetch(`${API_URL}/collection/characters`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-api-key': process.env.NEXT_PUBLIC_API_KEY || '',
+        'Authorization': `${Cookies.get('cardBattleToken')}`,
+        'x-refresh-token': `${Cookies.get('cardBattleRefreshToken')}`
+      },
+    })
+    const data = await response.json()
+    return data
+  } catch (error: any) {
+    return { success: false, message: error.message }
+  }
 }
 
-export const fetchCharacterSkills = async (characterId: string): Promise<SkillsResponse | ErrorResponse> => {
+export const fetchCharacterSkills = async (characterId: string): Promise<CardsResponse | ErrorResponse> => {
   if (!characterId) return { success: false, message: 'Character ID is required' }
   try {
     const response = await fetch(`${API_URL}/collection/character/${characterId}/skills`, {

@@ -27,7 +27,7 @@ export default function Modal({ size = 'md', isOpen, onClose, children, dismissi
       <div className="fixed inset-0 backdrop-blur-sm z-40" />
       <div className="fixed top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 z-40">
         <div className={`relative max-h-[calc(100dvh-2rem)] overflow-y-auto bg-white rounded-2xl border border-zinc-300/20 shadow-md shadow-zinc-300 p-4 w-[calc(100dvw-2rem)] ${sizeClasses}`}>
-          {dismissible && <button type="button" onClick={onClose} className="absolute top-2 right-2">
+          {dismissible && <button type="button" onClick={onClose} className="absolute top-2 right-2 cursor-pointer">
             <XIcon className="w-4 h-4" />
           </button>}
           {children}

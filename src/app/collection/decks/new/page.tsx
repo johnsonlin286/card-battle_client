@@ -3,11 +3,13 @@
 import { useState } from 'react';
 import Image from 'next/image';
 
-import { CompanionPick } from '@/components/deck/new/companionModal';
 import Breadcrumb from '@/components/Breadcrumb';
 import TextInput from '@/components/TextInput';
-import Button from '@/components/Button';
 import CardsGroup from '@/components/deck/new/CardsGroup';
+import CompanionPick from '@/components/deck/new/companionModal/CompanionPick';
+import SupportPick from '@/components/deck/new/companionModal/SupportPick';
+import ResourcePick from '@/components/deck/new/companionModal/ResourcePick';
+import Button from '@/components/Button';
 import ViewCard from '@/components/ViewCard';
 
 const BREADCRUMB_ITEMS = [
@@ -22,6 +24,8 @@ export default function CollectionDecksNewPage() {
   const [modalType, setModalType] = useState<ModalType | undefined>();
   const [companionA, setCompanionA] = useState<PickedCompanion | null>(null);
   const [companionB, setCompanionB] = useState<PickedCompanion | null>(null);
+  const [supports, setSupports] = useState<SelectedSupport[]>([]);
+  const [resources, setResources] = useState<SelectedResource[]>([]);
   const [selectedCard, setSelectedCard] = useState<string | null>(null);
 
   const handleSubmitCompanion = ({ name, companion }: { name: string, companion: PickedCompanion }) => {
@@ -75,16 +79,34 @@ export default function CollectionDecksNewPage() {
       </div>
       <hr className="border-zinc-300" />
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-        <CardsGroup title="Supports" onClick={() => setModalType('support')}>
-
-        </CardsGroup>
         <CardsGroup title="Resources" onClick={() => setModalType('resource')}>
-
+          <div className="h-full flex flex-nowrap items-center gap-2">
+            {resources.map((resource) => (
+              <div key={resource.resource_id} role="button" onClick={() => setSelectedCard(resource.image)} className="relative w-auto h-full cursor-pointer">
+                <Image src={resource.image} alt={resource.resource_id} width={0} height={0} sizes='100%' loading='lazy' className='w-auto h-full object-contain rounded-lg' />
+                <span className="absolute bottom-0 right-0 w-fit min-w-10 h-fit bg-black/80 text-white text-sm text-center py-0.5 px-1.5">
+                  {resource.quantity}
+                </span>
+              </div>
+            ))}
+          </div>
+        </CardsGroup>
+        <CardsGroup title="Supports" onClick={() => setModalType('support')}>
+          <div className="h-full flex flex-nowrap items-center gap-2">
+            {supports.map((support) => (
+              <div key={support.support_id} role="button" onClick={() => setSelectedCard(support.image)} className="relative w-auto h-full cursor-pointer">
+                <Image src={support.image} alt={support.support_id} width={0} height={0} sizes='100%' loading='lazy' className='w-auto h-full object-contain rounded-lg' />
+                <span className="absolute bottom-0 right-0 w-fit min-w-10 h-fit bg-black/80 text-white text-sm text-center py-0.5 px-1.5">
+                  {support.quantity}
+                </span>
+              </div>
+            ))}
+          </div>
         </CardsGroup>
       </div>
       <hr className="border-zinc-300" />
       <div className="flex justify-end gap-2">
-        <Button type="button" color="none" onClick={() => console.log('cancel')}>
+        <Button type="link" color="none" href="/collection/decks" >
           Cancel
         </Button>
         <Button type="button" color="primary" onClick={() => console.log('create deck')}>
@@ -97,6 +119,8 @@ export default function CollectionDecksNewPage() {
         onClose={() => setModalType(undefined)}
         onSubmit={handleSubmitCompanion}
       />
+      <SupportPick isOpen={modalType === 'support'} onClose={() => setModalType(undefined)} onSubmit={setSupports} />
+      <ResourcePick isOpen={modalType === 'resource'} onClose={() => setModalType(undefined)} onSubmit={setResources} />
       <ViewCard image={selectedCard || undefined} isOpen={!!selectedCard} onClose={() => setSelectedCard(null)} />
     </div>
   )

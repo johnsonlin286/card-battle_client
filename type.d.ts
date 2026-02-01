@@ -58,7 +58,7 @@ type AccountType = {
 
 type CardDto = {
   id: string;
-  [key: string]: any; // character_id, resource_id, support_id
+  [key: string]: string;
   image: string;
   quantity: number;
   in_used: number;
@@ -69,35 +69,9 @@ type CardsResponse = {
   data: CardDto[];
 }
 
-type CharacterDto = {
-  id: string;
-  character_id: string;
-  image: string;
-  quantity: number;
-  in_used: number;
-}
-
-type CharactersResponse = {
-  success: boolean;
-  data: CharacterDto[];
-}
-
 type SelectedCharacter = {
   character_id: string;
   image: string;
-}
-
-type SkillDto = {
-  id: string;
-  skill_id: string;
-  image: string;
-  quantity: number;
-  in_used: number;
-}
-
-type SkillsResponse = {
-  success: boolean;
-  data: SkillDto[];
 }
 
 type SelectedSkill = {
@@ -109,6 +83,18 @@ type SelectedSkill = {
 type PickedCompanion = {
   character: SelectedCharacter;
   skills: SelectedSkill[];
+}
+
+type SelectedSupport = {
+  support_id: string;
+  image: string;
+  quantity: number;
+}
+
+type SelectedResource = {
+  resource_id: string;
+  image: string;
+  quantity: number;
 }
 
 // New Deck

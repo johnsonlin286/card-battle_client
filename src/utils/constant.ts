@@ -11,6 +11,8 @@ const QUERY_KEYS = {
   COLLECTION: 'collection',
   COLLECTION_CHARACTERS: 'collection-characters',
   COLLECTION_CHARACTER_SKILLS: 'collection-character-skills',
+  COLLECTION_SUPPORTS: 'collection-supports',
+  COLLECTION_RESOURCES: 'collection-resources',
 }
 
 const MUTATION_KEYS = {

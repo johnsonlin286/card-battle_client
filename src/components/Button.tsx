@@ -8,7 +8,7 @@ interface ButtonProps {
   block?: boolean;
   href?: string;
   disabled?: boolean;
-  onClick: () => void;
+  onClick?: () => void;
   className?: string;
   spanStyle?: string;
 }

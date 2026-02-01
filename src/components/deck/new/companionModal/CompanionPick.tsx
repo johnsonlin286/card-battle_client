@@ -3,11 +3,10 @@ import { useQuery } from "@tanstack/react-query";
 
 import { QUERY_KEYS } from "@/utils/constant";
 import { fetchCollectionCards, fetchCharacterSkills } from "@/services/collections";
-import { useToastStore } from "@/store/toast";
 import Modal from "@/components/Modal";
-import Steps from "./Steps";
-import CharacterList from "./CharacterList";
-import SkillList from "./SkillList";
+import Steps from "@/components/deck/new/companionModal/Steps";
+import CharacterList from "@/components/deck/new/companionModal/CharacterList";
+import SkillList from "@/components/deck/new/companionModal/SkillList";
 
 interface CompanionPickProps {
   name: string;
@@ -60,7 +59,7 @@ export default function CompanionPick({ name, isOpen, onClose, onSubmit }: Compa
     if (skillsData) {
       const { success, data } = skillsData as any;
       if (success) {
-        return data as SkillDto[];
+        return data as CardDto[];
       }
     }
     return [];
@@ -75,10 +74,6 @@ export default function CompanionPick({ name, isOpen, onClose, onSubmit }: Compa
   const handleClose = useCallback(() => {
     onClose();
   }, [onClose]);
-
-  useEffect(() => {
-    console.log(selectedCompanion);
-  }, [selectedCompanion]);
 
   if (!isOpen) return null;
 
