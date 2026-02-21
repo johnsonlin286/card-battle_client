@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useCallback } from "react";
 import { Loader } from "lucide-react";
 
 import CardPick from "@/components/deck/new/companionModal/CardPick";
@@ -14,7 +14,7 @@ interface SkillListProps {
 export default function SkillList({ isLoading, skills, onSubmit, onCancel }: SkillListProps) {
   const [selectedSkills, setSelectedSkills] = useState<SelectedSkill[]>([]);
 
-  const skillCardsHandlers = (skillId: string, quantity: number) => {
+  const skillCardsHandlers = useCallback((skillId: string, quantity: number) => {
     const selectedSkill = selectedSkills.find((skill) => skill.skill_id === skillId);
     if (selectedSkill) {
       setSelectedSkills(selectedSkills.map((skill) => skill.skill_id === skillId ? { ...skill, quantity } : skill));
@@ -22,7 +22,7 @@ export default function SkillList({ isLoading, skills, onSubmit, onCancel }: Ski
       const skillImage = skills.find((skill) => skill.skill_id === skillId)?.image || '';
       setSelectedSkills([...selectedSkills, { skill_id: skillId, image: skillImage, quantity }]);
     }
-  }
+  }, [selectedSkills, skills]);
 
   const submitSelectedSkills = () => {
     onSubmit(selectedSkills);

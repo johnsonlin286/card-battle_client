@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { useRouter } from 'next/navigation';
 import Image from 'next/image';
 
 import Breadcrumb from '@/components/Breadcrumb';
@@ -20,6 +21,7 @@ const BREADCRUMB_ITEMS = [
 type ModalType = 'companion-a' | 'companion-b' | 'skill' | 'resource' | 'support';
 
 export default function CollectionDecksNewPage() {
+  const nextRouter = useRouter();
   const [deckName, setDeckName] = useState<string>('New Deck 1');
   const [modalType, setModalType] = useState<ModalType | undefined>();
   const [companionA, setCompanionA] = useState<PickedCompanion | null>(null);
@@ -106,7 +108,7 @@ export default function CollectionDecksNewPage() {
       </div>
       <hr className="border-zinc-300" />
       <div className="flex justify-end gap-2">
-        <Button type="link" color="none" href="/collection/decks" >
+        <Button type="button" color="none" onClick={() => nextRouter.back()}>
           Cancel
         </Button>
         <Button type="button" color="primary" onClick={() => console.log('create deck')}>
@@ -115,6 +117,7 @@ export default function CollectionDecksNewPage() {
       </div>
       <CompanionPick
         name={`Companion ${modalType === 'companion-a' ? 'A' : modalType === 'companion-b' ? 'B' : ''}`}
+        companion={modalType === 'companion-a' ? companionA : modalType === 'companion-b' ? companionB : null}
         isOpen={modalType === 'companion-a' || modalType === 'companion-b'}
         onClose={() => setModalType(undefined)}
         onSubmit={handleSubmitCompanion}

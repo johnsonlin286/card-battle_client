@@ -23,7 +23,8 @@ export default function CardPick({ type, card, maxQuantity, onChange }: CardPick
   }
 
   const handleIncreaseQuantity = () => {
-    setUsedQuantity(Math.min(usedQuantity + 1, maxQuantity));
+    if (usedQuantity >= (card.quantity - card.in_used)) return;
+    setUsedQuantity(Math.min(usedQuantity + 1,  maxQuantity));
   }
 
   useEffect(() => {
